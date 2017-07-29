@@ -19,10 +19,12 @@ def test_kripke_structure_init():
     assert ks.worlds[0].name == "1"
     assert ks.worlds[0].assignment == {("p", True)}
 
+
 def test_ks_wrong_type():
     with pytest.raises(TypeError):
         KripkeStructure([1], [])
     assert True
+
 
 def test_solver_wrong_type():
     with pytest.raises(TypeError):
@@ -36,7 +38,6 @@ def test_solver_wrong_type():
         Solver.is_formula_in_world_sat(ks, "1", [])
     assert True
 
-
 """
 def test_ks_one_world():
     worlds = [World("1", {("p", True)})]
@@ -45,3 +46,4 @@ def test_ks_one_world():
     atom = Atom("p");
     assert True == Solver.is_formula_in_world_sat(ks, "1", atom)
 """
+
