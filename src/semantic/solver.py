@@ -12,6 +12,8 @@ def is_formula_in_world_sat(ks, world_to_test, atom):
     if isinstance(world_to_test, World):
         raise TypeError
 
-        # for world in ks.worlds:
-        #  if world == world_to_test:
-        #     ks.assignments.
+    for world in ks.worlds:
+        if world.name == world_to_test:
+            for assign in world.assignment:
+                if assign[0] == atom.name:
+                    return assign[1]
