@@ -38,6 +38,11 @@ def test_solver_wrong_type():
         Solver.is_formula_in_world_sat(ks, "1", [])
     assert True
 
+    with pytest.raises(TypeError):
+        Solver.is_formula_in_world_sat(ks, World("1", {("p", True)}), Atom("p"))
+    assert True
+
+
 """
 def test_ks_one_world():
     worlds = [World("1", {("p", True)})]
@@ -46,4 +51,3 @@ def test_ks_one_world():
     atom = Atom("p");
     assert True == Solver.is_formula_in_world_sat(ks, "1", atom)
 """
-
