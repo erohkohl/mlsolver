@@ -1,0 +1,23 @@
+# This class represents propositional logic variables in modal logic formulas
+class Atom():
+    def __init__(self, name):
+        self.name = name
+
+    def semantic(self, ks, world_to_test):
+        for world in ks.worlds:
+            if world.name == world_to_test:
+                for assign in world.assignment:
+                    if assign[0] == self.name:
+                        return assign[1]
+
+
+# Describes box operator or modal logic formula and it's semantics
+class Box():
+    def __init__(self, mlp):
+        self.mlp = mlp
+
+    def semantic(self, ks, world_to_test):
+        # for relation in ks.relations:
+        #   if relation[0] == world_to_test:
+        #      return
+        return self.mlp.semantic(ks, world_to_test)

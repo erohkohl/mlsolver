@@ -1,6 +1,6 @@
 import pytest
 
-from src.formula.atom import Atom
+from src.formula.mlp import Atom, Box
 from src.kripke.structure import KripkeStructure, World
 from src.semantic import solver as Solver
 
@@ -49,3 +49,38 @@ def test_ks_one_world():
     ks = KripkeStructure(worlds, relations)
     atom = Atom("p");
     assert True == Solver.is_formula_in_world_sat(ks, "1", atom)
+
+
+def test_semantic_box_p_one_world_true():
+    worlds = [World("1", {("p", True)})]
+    relations = {}
+    ks = KripkeStructure(worlds, relations)
+    mpl = Box(
+        Atom("p")
+    );
+    assert True == Solver.is_formula_in_world_sat(ks, "1", mpl)
+
+
+def test_semantic_box_p_one_world_false():
+    worlds = [World("1", {("p", False)})]
+    relations = {}
+    ks = KripkeStructure(worlds, relations)
+    mpl = Box(
+        Atom("p")
+    );
+    assert False == Solver.is_formula_in_world_sat(ks, "1", mpl)
+
+
+"""
+def test_semantic_box_p_two_worlds_true():
+    worlds = [
+        World("1", {("p", False)}),
+        World("2", {("p", True)})
+    ]
+    relations = {("1", "2")}
+    ks = KripkeStructure(worlds, relations)
+    mpl = Box(
+        Atom("p")
+    );
+    assert True == Solver.is_formula_in_world_sat(ks, "1", mpl)
+"""

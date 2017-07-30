@@ -1,19 +1,25 @@
-from src.formula.atom import Atom
+from src.formula.mlp import Atom, Box
 from src.kripke.structure import KripkeStructure, World
 
 
-def is_formula_in_world_sat(ks, world_to_test, atom):
+def is_formula_in_world_sat(ks, world_to_test, formula):
     if not isinstance(ks, KripkeStructure):
         raise TypeError
-    if not isinstance(atom, Atom):
+    if not isinstance(formula, Atom) and not isinstance(formula, Box):
         raise TypeError
 
     # check whether world_to_test is just String and not type World, because we want to address one world in our KS
     if isinstance(world_to_test, World):
         raise TypeError
 
+    return formula.semantic(ks, world_to_test)
+
+
+"""
     for world in ks.worlds:
         if world.name == world_to_test:
+
             for assign in world.assignment:
-                if assign[0] == atom.name:
+                if assign[0] == formula.semantic(ks, world_to_test):
                     return assign[1]
+"""
