@@ -13,13 +13,3 @@ def is_formula_in_world_sat(ks, world_to_test, formula):
         raise TypeError
 
     return formula.semantic(ks, world_to_test)
-
-
-"""
-    for world in ks.worlds:
-        if world.name == world_to_test:
-
-            for assign in world.assignment:
-                if assign[0] == formula.semantic(ks, world_to_test):
-                    return assign[1]
-"""

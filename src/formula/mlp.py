@@ -17,7 +17,9 @@ class Box():
         self.mlp = mlp
 
     def semantic(self, ks, world_to_test):
-        # for relation in ks.relations:
-        #   if relation[0] == world_to_test:
-        #      return
-        return self.mlp.semantic(ks, world_to_test)
+        result = True;
+        for relation in ks.relations:
+            if relation[0] == world_to_test:
+                result = result and self.mlp.semantic(ks, relation[1])
+
+        return result
