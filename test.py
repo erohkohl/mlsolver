@@ -1,7 +1,7 @@
 import pytest
 
-from src.formula.mlp import Atom, Box, Diamond, Implies, And, Or, Not
-from src.kripke.structure import KripkeStructure, World
+from src.formula import Atom, Box, Diamond, Implies, And, Or, Not
+from src.kripke import KripkeStructure, World
 
 
 def test_atom_init():
