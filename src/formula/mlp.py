@@ -11,7 +11,7 @@ class Atom():
                         return assign[1]
 
 
-# Describes box operator or modal logic formula and it's semantics
+# Describes box operator of modal logic formula and it's semantics
 class Box():
     def __init__(self, mlp):
         self.mlp = mlp
@@ -21,5 +21,19 @@ class Box():
         for relation in ks.relations:
             if relation[0] == world_to_test:
                 result = result and self.mlp.semantic(ks, relation[1])
+
+        return result
+
+
+# Describes diamond operator of modal logic formula and it's semantics
+class Diamond():
+    def __init__(self, mlp):
+        self.mlp = mlp
+
+    def semantic(self, ks, world_to_test):
+        result = False;
+        for relation in ks.relations:
+            if relation[0] == world_to_test:
+                result = result or self.mlp.semantic(ks, relation[1])
 
         return result
