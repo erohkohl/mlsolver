@@ -37,3 +37,42 @@ class Diamond():
                 result = result or self.mlp.semantic(ks, relation[1])
 
         return result
+
+
+# Describes implication derived from classic propositional logic
+class Implies():
+    def __init__(self, left_mlp, right_mlp):
+        self.left_mlp = left_mlp
+        self.right_mlp = right_mlp
+
+    def semantic(self, ks, world_to_test):
+        return not self.left_mlp.semantic(ks, world_to_test) or self.right_mlp.semantic(ks, world_to_test)
+
+
+# Describes negation derived from classic propositional logic
+class Not():
+    def __init__(self, mlp):
+        self.mlp = mlp
+
+    def semantic(self, ks, world_to_test):
+        return not self.mlp.semantic(ks, world_to_test)
+
+
+# Describes and derived from classic propositional logic
+class And():
+    def __init__(self, left_mlp, right_mlp):
+        self.left_mlp = left_mlp
+        self.right_mlp = right_mlp
+
+    def semantic(self, ks, world_to_test):
+        return self.left_mlp.semantic(ks, world_to_test) and self.right_mlp.semantic(ks, world_to_test)
+
+
+# Describes or derived from classic propositional logic
+class Or():
+    def __init__(self, left_mlp, right_mlp):
+        self.left_mlp = left_mlp
+        self.right_mlp = right_mlp
+
+    def semantic(self, ks, world_to_test):
+        return self.left_mlp.semantic(ks, world_to_test) or self.right_mlp.semantic(ks, world_to_test)
