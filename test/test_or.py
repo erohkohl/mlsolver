@@ -4,8 +4,8 @@ from src.kripke import KripkeStructure, World
 
 def test_semantic_p_or_q():
     worlds = [
-        World('1', {('p', True)}),
-        World('1', {('q', False)})
+        World('1', {'p': True}),
+        World('1', {'q': False})
     ]
     relations = {('1', '2'), ('1', '3')}
     ks = KripkeStructure(worlds, relations)

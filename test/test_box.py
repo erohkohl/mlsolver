@@ -3,7 +3,7 @@ from src.kripke import KripkeStructure, World
 
 
 def test_semantic_box_p_one_world_true():
-    worlds = [World('1', {('p', True)})]
+    worlds = [World('1', {'p': True})]
     relations = {}
     ks = KripkeStructure(worlds, relations)
     mpl = Box(
@@ -13,7 +13,7 @@ def test_semantic_box_p_one_world_true():
 
 
 def test_semantic_box_p_one_world_false():
-    worlds = [World('1', {('p', False)})]
+    worlds = [World('1', {'p': False})]
     relations = {}
     ks = KripkeStructure(worlds, relations)
     mpl = Box(
@@ -23,7 +23,7 @@ def test_semantic_box_p_one_world_false():
 
 
 def test_semantic_box_p_one_world_reflex_edge_true():
-    worlds = [World('1', {('p', True)})]
+    worlds = [World('1', {'p': True})]
     relations = {('1', '1')}
     ks = KripkeStructure(worlds, relations)
     mpl = Box(
@@ -33,7 +33,7 @@ def test_semantic_box_p_one_world_reflex_edge_true():
 
 
 def test_semantic_box_p_one_world_reflex_edge_false():
-    worlds = [World('1', {('p', False)})]
+    worlds = [World('1', {'p': False})]
     relations = {('1', '1')}
     ks = KripkeStructure(worlds, relations)
     mpl = Box(
@@ -44,8 +44,8 @@ def test_semantic_box_p_one_world_reflex_edge_false():
 
 def test_semantic_box_p_two_worlds_true():
     worlds = [
-        World('1', {('p', False)}),
-        World('2', {('p', True)})
+        World('1', {'p': False}),
+        World('2', {'p': True})
     ]
     relations = {('1', '2')}
     ks = KripkeStructure(worlds, relations)
@@ -57,8 +57,8 @@ def test_semantic_box_p_two_worlds_true():
 
 def test_semantic_box_p_two_worlds_false():
     worlds = [
-        World('1', {('p', False)}),
-        World('2', {('p', False)})
+        World('1', {'p': False}),
+        World('2', {'p': False})
     ]
     relations = {('1', '2')}
     ks = KripkeStructure(worlds, relations)
@@ -70,9 +70,9 @@ def test_semantic_box_p_two_worlds_false():
 
 def test_semantic_box_p_three_worlds_true():
     worlds = [
-        World('1', {('p', False)}),
-        World('2', {('p', True)}),
-        World('3', {('p', True)}),
+        World('1', {'p': False}),
+        World('2', {'p': True}),
+        World('3', {'p': True}),
     ]
     relations = {('1', '2'), ('1', '3')}
     ks = KripkeStructure(worlds, relations)
@@ -84,9 +84,9 @@ def test_semantic_box_p_three_worlds_true():
 
 def test_semantic_box_p_three_worlds_false():
     worlds = [
-        World('1', {('p', False)}),
-        World('2', {('p', True)}),
-        World('3', {('p', False)}),
+        World('1', {'p': False}),
+        World('2', {'p': True}),
+        World('3', {'p': False}),
     ]
     relations = {('1', '2'), ('1', '3')}
     ks = KripkeStructure(worlds, relations)

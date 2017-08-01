@@ -8,7 +8,7 @@ def test_atom_init():
 
 
 def test_ks_one_world():
-    worlds = [World('1', {('p', True)})]
+    worlds = [World('1', {'p': True})]
     relations = {}
     ks = KripkeStructure(worlds, relations)
     atom = Atom('p')

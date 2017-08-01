@@ -7,6 +7,7 @@ class KripkeStructure:
         else:
             raise TypeError
 
+
 # Represents the nodes of Kripke and it extends the graph to Kripke Structure by assigning a subset of propositional
 # variables to each world.
 class World:

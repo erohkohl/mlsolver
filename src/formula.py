@@ -6,9 +6,7 @@ class Atom():
     def semantic(self, ks, world_to_test):
         for world in ks.worlds:
             if world.name == world_to_test:
-                for assign in world.assignment:
-                    if assign[0] == self.name:
-                        return assign[1]
+                return world.assignment[self.name]
 
 
 # Describes box operator of modal logic formula and it's semantics
