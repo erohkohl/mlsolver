@@ -21,7 +21,7 @@ def draw_graph(ks, labels):
 
     pos = nx.shell_layout(G)
     nx.draw(G, pos)
-    nx.draw_networkx_nodes(G, pos, node_size=3000, node_color="white")
+    nx.draw_networkx_nodes(G, pos, node_size=3000, node_color="white", linewidths=3.0)
 
     # labels
     nx.draw_networkx_labels(G, pos, font_size=15, font_family='sans-serif', label_pos=0.1)
