@@ -1,4 +1,4 @@
-from src.formula import Atom, Box, Diamond, Implies, And, Or, Not
+from src.formula import Atom
 from src.kripke import KripkeStructure, World
 
 
@@ -13,3 +13,10 @@ def test_ks_one_world():
     ks = KripkeStructure(worlds, relations)
     atom = Atom('p')
     assert True == atom.semantic(ks, '1')
+
+def test_atom_is_false_if_q_not_in_V():
+    worlds = [World('1', {'p': True})]
+    relations = {}
+    ks = KripkeStructure(worlds, relations)
+    atom = Atom('q')
+    assert False == atom.semantic(ks, '1')
