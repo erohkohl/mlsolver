@@ -39,7 +39,8 @@ class WiseMenWithHat():
         # Third wise man knows color of his hat
         self.announcement_three = Atom('3:R')
 
-# TODO
+
+# Routine adds symmetric edges to Kripke frame
 def add_symmetric_edges(relations):
     result = {}
     for agent, agents_relations in relations.items():
@@ -51,7 +52,7 @@ def add_symmetric_edges(relations):
     return result
 
 
-# TODO
+# Routine adds reflexive edges to Kripke frame
 def add_reflexive_edges(worlds, relations):
     result = {}
     for agent, agents_relations in relations.items():
@@ -62,7 +63,7 @@ def add_reflexive_edges(worlds, relations):
     return result
 
 
-# TODO
+# Returns a list with all worlds of Kripke structure, where formula is not satisfiable
 def nodes_not_follow_formula(formula, ks):
     nodes_not_follow_formula = []
     for nodes in ks.worlds:
