@@ -2,10 +2,11 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 from src.model import WiseMenWithHat
+import src.model as Model
 
 
 # Routine to plot Kripke Frame with relations for all agents
-def draw_graph(ks, labels):
+def draw_graph(ks, labels, nodes_not_follow_formula):
     nodes = list(world.name for world in ks.worlds)
     G = nx.Graph()
 
@@ -17,12 +18,13 @@ def draw_graph(ks, labels):
     for agent, l in zip(ks.relations, labels):
         edges = ks.relations.get(agent)
         for edge in edges:
-            # G.add_edge(edge[0], edge[1])
             edge_list.append((edge[0], edge[1]))
             label.update({edge: l})
 
     pos = nx.shell_layout(G)
-    nx.draw_networkx_nodes(G, pos, node_size=3000, node_color="lightgrey", linewidths=3.0)
+    nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_size=3000, node_color="lightgrey", linewidths=3.0)
+    nx.draw_networkx_nodes(G, pos, nodelist=nodes_not_follow_formula, node_size=3000, node_color="red",
+                           linewidths=3.0)
     nx.draw_networkx_edges(G, pos, edgelist=edge_list, width=2, alpha=0.5, edge_color='black')
 
     # labels
@@ -32,7 +34,11 @@ def draw_graph(ks, labels):
     plt.axis('off')
 
 
-ks = WiseMenWithHat().ks
+wise_men_model = WiseMenWithHat()
+ks = wise_men_model.ks
 plt.savefig("./scripts/wise_men_with_hat_graph.png")
-draw_graph(ks, ["1", "2", "3"])
+draw_graph(ks, ["1", "2", "3"], Model.nodes_not_follow_formula(wise_men_model.announcement_one, wise_men_model.ks))
+draw_graph(ks, ["1", "2", "3"], Model.nodes_not_follow_formula(wise_men_model.announcement_two, wise_men_model.ks))
+print(Model.nodes_not_follow_formula(wise_men_model.announcement_two, wise_men_model.ks))  # TODO
+
 plt.show()

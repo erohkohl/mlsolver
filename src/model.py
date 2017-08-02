@@ -34,10 +34,13 @@ class WiseMenWithHat():
         self.announcement_one = Or(Atom('2:R'), Atom('3:R'))
 
         # Wise man TWO does not know color of his hat
-        self.announcement_two = Or(Atom('1:R'), Atom('3:R'))
+        self.announcement_two = Atom('3:R')
 
         # Third wise man knows color of his hat
         self.announcement_three = Atom('3:R')
+
+        print(nodes_not_follow_formula(self.announcement_one, self.ks))  # TODO
+        print(nodes_not_follow_formula(self.announcement_two, self.ks))  # TODO
 
 
 # Routine adds symmetric edges to Kripke frame
