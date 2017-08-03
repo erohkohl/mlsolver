@@ -18,25 +18,23 @@ TODO definition of kss
         World('3', {'q': True})
     ]
 
-    relations = {'a': {('1', '2'), ('2', '1'), ('1', '3'), ('3', '3')}}
+    relations = {('1', '2'), ('2', '1'), ('1', '3'), ('3', '3')}
     ks = KripkeStructure(worlds, relations)
 ```
 
-#### Describe modal logic formula
+#### Describe modal logic formula and check semantic of formula over one world
 <img src="./doc/formula_example.png" width="380">
 ```python
     formula = Implies(
         Diamond(Atom('p')),
         And(
             Box(Box(Atom('q'))),
-            Diamond('q')
+            Diamond(Atom('q'))
         )
     )
 
     assert True == formula.semantic(ks, '1')
 ```
-
-#### Check semantic of formula over one world
 
 
 #### Example: Three wise men with hat

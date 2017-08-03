@@ -9,14 +9,14 @@ def test_example_for_readme():
         World('3', {'q': True})
     ]
 
-    relations = {'a': {('1', '2'), ('2', '1'), ('1', '3'), ('3', '3')}}
+    relations = {('1', '2'), ('2', '1'), ('1', '3'), ('3', '3')}
     ks = KripkeStructure(worlds, relations)
 
     formula = Implies(
         Diamond(Atom('p')),
         And(
             Box(Box(Atom('q'))),
-            Diamond('q')
+            Diamond(Atom('q'))
         )
     )
 
