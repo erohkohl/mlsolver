@@ -6,7 +6,7 @@ import src.model as Model
 
 
 # Routine to plot Kripke Frame with relations for all agents
-def draw_graph(ks, labels, nodes_not_follow_formula):
+def draw_graph(ks, labels, nodes_one, color_one, nodes_two, color_two):
     nodes = list(world.name for world in ks.worlds)
     G = nx.Graph()
 
@@ -23,7 +23,9 @@ def draw_graph(ks, labels, nodes_not_follow_formula):
 
     pos = nx.shell_layout(G)
     nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_size=3000, node_color="green", linewidths=3.0)
-    nx.draw_networkx_nodes(G, pos, nodelist=nodes_not_follow_formula, node_size=3000, node_color="red",
+    nx.draw_networkx_nodes(G, pos, nodelist=nodes_one, node_size=3000, node_color=color_one,
+                           linewidths=3.0)
+    nx.draw_networkx_nodes(G, pos, nodelist=nodes_two, node_size=3000, node_color=color_two,
                            linewidths=3.0)
     nx.draw_networkx_edges(G, pos, edgelist=edge_list, width=2, alpha=0.5, edge_color='black')
 
@@ -37,9 +39,10 @@ def draw_graph(ks, labels, nodes_not_follow_formula):
 wise_men_model = WiseMenWithHat()
 ks = wise_men_model.ks
 
-draw_graph(ks, ["1", "2", "3"],
-           Model.nodes_not_follow_formula(wise_men_model.implicit_knowledge_one, wise_men_model.ks))
-draw_graph(ks, ["1", "2", "3"],
-           Model.nodes_not_follow_formula(wise_men_model.announcement_three, wise_men_model.ks))
+nodes = Model.nodes_not_follow_formula(wise_men_model.implicit_knowledge_one, wise_men_model.ks)
+nodes_two = Model.nodes_not_follow_formula(wise_men_model.announcement_three, wise_men_model.ks)
+for x in nodes:
+    nodes_two.remove(x)
 
+draw_graph(ks, ["1", "2", "3"], nodes, "orange", nodes_two, "red")
 plt.show()
