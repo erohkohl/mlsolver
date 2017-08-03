@@ -1,5 +1,5 @@
 from src.kripke import KripkeStructure, World
-from src.formula import Atom, Or
+from src.formula import Atom, And, Not, Or, Box_a
 
 
 # Class models the Kripke structure of the "Three wise men example."
@@ -30,17 +30,26 @@ class WiseMenWithHat():
 
         self.ks = KripkeStructure(worlds, relations)
 
-        # Wise man ONE does not know color of his hat
-        self.announcement_one = Or(Atom('2:R'), Atom('3:R'))
+        # Wise man ONE does not know whether he wears a red hat or not
+        self.announcement_one = And(Not(Box_a('1', Atom('1:R'))), Not(Box_a('1', Not(Atom('1:R')))))
 
-        # Wise man TWO does not know color of his hat
-        self.announcement_two = Atom('3:R')
+        # This announcement implies that either second or third wise man wears a red hat.
+        self.implicit_knowledge_one = Or(Atom('2:R'), Atom('3:R'))
 
-        # Third wise man knows color of his hat
+        # Wise man TWO does not know whether he wears a red hat or not
+        self.announcement_two = And(Not(Box_a('2', Atom('2:R'))), Not(Box_a('2', Not(Atom('2:R')))))
+
+        # This announcement implies that third men has be the one, who wears a red hat
+        self.implicit_knowledge_two = Box_a('3', Atom('3:R'))
+
+        # Wise man three says YES, I know the color ouf my hat.
         self.announcement_three = Atom('3:R')
 
-        print(nodes_not_follow_formula(self.announcement_one, self.ks))  # TODO
-        print(nodes_not_follow_formula(self.announcement_two, self.ks))  # TODO
+        print("1: No ", nodes_not_follow_formula(self.announcement_one, self.ks))  # TODO
+        print("-> ", nodes_not_follow_formula(self.implicit_knowledge_one, self.ks))  # TODO
+        print("2: No ", nodes_not_follow_formula(self.announcement_two, self.ks))  # TODO
+        print("-> ", nodes_not_follow_formula(self.implicit_knowledge_two, self.ks))  # TODO
+        print("3: Yes ", nodes_not_follow_formula(self.announcement_three, self.ks))  # TODO
 
 
 # Routine adds symmetric edges to Kripke frame

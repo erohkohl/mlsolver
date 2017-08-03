@@ -1,6 +1,6 @@
 import src.model as Model
 from src.kripke import World, KripkeStructure
-from src.formula import And, Atom
+from src.formula import And, Atom, Not, Box_a
 
 
 def test_add_symmetric_edges():
