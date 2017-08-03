@@ -52,6 +52,21 @@ class Diamond():
         return result
 
 
+# Describes diamond operator of modal logic formula and it's semantics for Agent a
+class Diamond_a():
+    def __init__(self, agent, mlp):
+        self.mlp = mlp
+        self.agent = agent
+
+    def semantic(self, ks, world_to_test):
+        result = False
+        for relation in ks.relations.get(self.agent, {}):
+            if relation[0] == world_to_test:
+                result = result or self.mlp.semantic(ks, relation[1])
+
+        return result
+
+
 # Describes implication derived from classic propositional logic
 class Implies():
     def __init__(self, left_mlp, right_mlp):

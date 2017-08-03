@@ -45,4 +45,6 @@ for x in nodes:
     nodes_two.remove(x)
 
 draw_graph(ks, ["1", "2", "3"], nodes, "orange", nodes_two, "red")
+f = plt.figure(1)
+f.set_facecolor('w')
 plt.show()
