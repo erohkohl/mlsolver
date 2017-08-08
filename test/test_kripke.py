@@ -2,8 +2,6 @@ import pytest
 
 from src.kripke import KripkeStructure, World
 from src.formula import And, Atom
-from src.model import WiseMenWithHat
-import src.model as Model
 
 
 def test_kripke_structure_init():
@@ -122,31 +120,3 @@ def test_nodes_not_follow_formula():
     result = ks.nodes_not_follow_formula(formula)
 
     assert expected_result == result
-
-
-def test_solve_with_model():
-    wise_men_model = WiseMenWithHat()
-    ks = wise_men_model.ks
-    ks_result = ks.solve(wise_men_model.knowledge_base[1])
-
-    worlds_expected = [
-        World('RRW', {'1:R': True, '2:R': True, '3:W': True}),
-        World('RRR', {'1:R': True, '2:R': True, '3:R': True}),
-        World('WRR', {'1:W': True, '2:R': True, '3:R': True}),
-
-        World('WWR', {'1:W': True, '2:W': True, '3:R': True}),
-        World('RWR', {'1:R': True, '2:W': True, '3:R': True}),
-        World('WRW', {'1:W': True, '2:R': True, '3:W': True}),
-    ]
-
-    relations_expected = {
-        '1': {('RRW', 'WRW'), ('RWR', 'WWR'), ('WRR', 'RRR')},
-        '2': {('RWR', 'RRR'), ('WRR', 'WWR')},
-        '3': {('RRR', 'RRW'), ('WRW', 'WRR')}
-    }
-
-    relations_expected.update(Model.add_reflexive_edges(worlds_expected, relations_expected))
-    relations_expected.update(Model.add_symmetric_edges(relations_expected))
-    ks_expected = KripkeStructure(worlds_expected, relations_expected)
-
-    assert ks_expected.__eq__(ks)
