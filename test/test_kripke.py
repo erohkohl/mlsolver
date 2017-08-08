@@ -1,6 +1,7 @@
 import pytest
 
 from src.kripke import KripkeStructure, World
+from src.formula import And, Atom
 from src.model import WiseMenWithHat
 import src.model as Model
 
@@ -107,6 +108,20 @@ def test_remove_node_reflexive_edge():
     ks.remove_node_by_name('1')
 
     assert ks_expected.__eq__(ks)
+
+
+def test_nodes_not_follow_formula():
+    worlds = [World('RWW', {'1:R': True, '2:W': True, '3:W': True}),
+              World('RRW', {'1:R': True, '2:R': True, '3:W': True})]
+    relations = {}
+
+    ks = KripkeStructure(worlds, relations)
+    formula = And(Atom('2:W'), Atom('3:W'))
+
+    expected_result = ['RRW']
+    result = ks.nodes_not_follow_formula(formula)
+
+    assert expected_result == result
 
 
 def test_solve_with_model():

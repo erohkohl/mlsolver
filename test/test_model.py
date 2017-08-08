@@ -1,6 +1,5 @@
 import src.model as Model
-from src.kripke import World, KripkeStructure
-from src.formula import And, Atom, Not, Box_a
+from src.kripke import World
 
 
 def test_add_symmetric_edges():
@@ -36,17 +35,3 @@ def test_add_reflexive_edges_two_agents():
     relations = Model.add_reflexive_edges(worlds, relations)
 
     assert expected_realtions == relations
-
-
-def test_nodes_not_follow_formula():
-    worlds = [World('RWW', {'1:R': True, '2:W': True, '3:W': True}),
-              World('RRW', {'1:R': True, '2:R': True, '3:W': True})]
-    relations = {}
-
-    ks = KripkeStructure(worlds, relations)
-    formula = And(Atom('2:W'), Atom('3:W'))
-
-    expected_result = ['RRW']
-    result = Model.nodes_not_follow_formula(formula, ks)
-
-    assert expected_result == result
