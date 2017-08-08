@@ -45,11 +45,9 @@ class WiseMenWithHat():
         # Wise man three says YES, I know the color ouf my hat.
         self.announcement_three = Atom('3:R')
 
-        print("1: No ", nodes_not_follow_formula(self.announcement_one, self.ks))  # TODO
-        print("-> ", nodes_not_follow_formula(self.implicit_knowledge_one, self.ks))  # TODO
-        print("2: No ", nodes_not_follow_formula(self.announcement_two, self.ks))  # TODO
-        print("-> ", nodes_not_follow_formula(self.implicit_knowledge_two, self.ks))  # TODO
-        print("3: Yes ", nodes_not_follow_formula(self.announcement_three, self.ks))  # TODO
+        ks = self.ks.make_consistent_with_formula(self.implicit_knowledge_one)#TODO
+        for w in ks.worlds:
+            print(w.name)
 
 
 # Routine adds symmetric edges to Kripke frame
@@ -73,12 +71,3 @@ def add_reflexive_edges(worlds, relations):
             result_agents.add((world.name, world.name))
             result[agent] = result_agents
     return result
-
-
-# Returns a list with all worlds of Kripke structure, where formula is not satisfiable
-def nodes_not_follow_formula(formula, ks):
-    nodes_not_follow_formula = []
-    for nodes in ks.worlds:
-        if not formula.semantic(ks, nodes.name):
-            nodes_not_follow_formula.append(nodes.name)
-    return nodes_not_follow_formula

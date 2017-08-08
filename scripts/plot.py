@@ -39,12 +39,12 @@ def draw_graph(ks, labels, nodes_one, color_one, nodes_two, color_two):
 wise_men_model = WiseMenWithHat()
 ks = wise_men_model.ks
 
-nodes = Model.nodes_not_follow_formula(wise_men_model.implicit_knowledge_one, wise_men_model.ks)
-nodes_two = Model.nodes_not_follow_formula(wise_men_model.announcement_three, wise_men_model.ks)
-for x in nodes:
-    nodes_two.remove(x)
+#nodes = Model.nodes_not_follow_formula(wise_men_model.implicit_knowledge_one, wise_men_model.ks)
+#nodes_two = Model.nodes_not_follow_formula(wise_men_model.announcement_three, wise_men_model.ks)
+#for x in nodes:
+ #   nodes_two.remove(x)
 
-draw_graph(ks, ["1", "2", "3"], nodes, "orange", nodes_two, "red")
-f = plt.figure(1)
-f.set_facecolor('w')
-plt.show()
+#draw_graph(ks, ["1", "2", "3"], nodes, "orange", nodes_two, "red")
+#f = plt.figure(1)
+#f.set_facecolor('w')
+#plt.show()
