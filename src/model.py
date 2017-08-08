@@ -4,7 +4,6 @@ from src.formula import Atom, And, Not, Or, Box_a
 
 # Class models the Kripke structure of the "Three wise men example."
 class WiseMenWithHat():
-    ks = ()
 
     def __init__(self):
         worlds = [
@@ -45,9 +44,9 @@ class WiseMenWithHat():
         # Wise man three says YES, I know the color ouf my hat.
         self.announcement_three = Atom('3:R')
 
-        ks = self.ks.make_consistent_with_formula(self.implicit_knowledge_one)#TODO
-        for w in ks.worlds:
-            print(w.name)
+        #ks = self.ks.solve(self.implicit_knowledge_one)#TODO
+        #for w in ks.worlds:
+         #   print(w.name)
 
 
 # Routine adds symmetric edges to Kripke frame

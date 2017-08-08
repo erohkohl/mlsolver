@@ -1,6 +1,8 @@
 import pytest
 
 from src.kripke import KripkeStructure, World
+from src.model import WiseMenWithHat
+import src.model as Model
 
 
 def test_kripke_structure_init():
@@ -15,7 +17,7 @@ def test_kripke_structure_init():
 
 def test_ks_wrong_type():
     with pytest.raises(TypeError):
-        KripkeStructure([1], [])
+        KripkeStructure("p", [])
     assert True
 
 
@@ -25,7 +27,7 @@ def test_get_power_set_of_worlds():
     ks = KripkeStructure(worlds, relations)
 
     expected_result = [{}, {'1'}, {'2'}, {'3'}, {'1', '2'}, {'1', '3'}, {'2', '3'}, {'1', '2', '3'}]
-    result = ks.__get_power_set_of_worlds__();
+    result = ks.get_power_set_of_worlds();
     for i, j in zip(result, expected_result):
         assert i == j
 
@@ -71,7 +73,7 @@ def test_remove_node_trivial_case():
     relations = {('1', '2')}
     ks = KripkeStructure(worlds, relations)
     ks_expected = KripkeStructure([World('2', {'p': True})], {})
-    ks._remove_node_by_name('1')
+    ks.remove_node_by_name('1')
 
     assert ks_expected.__eq__(ks)
 
@@ -82,7 +84,8 @@ def test_remove_node_one_agent():
     ks = KripkeStructure(worlds, relations)
     ks_expected = KripkeStructure([World('2', {'p': True})], {'a': set()})
 
-    ks._remove_node_by_name('1')
+    ks.remove_node_by_name('1')
+
     assert ks_expected.__eq__(ks)
 
 
@@ -91,18 +94,44 @@ def test_remove_node_trivial_case_two_agent():
     relations = {'a': {('1', '2')}, 'b': {('2', '2')}}
     ks = KripkeStructure(worlds, relations)
     ks_expected = KripkeStructure([World('2', {'p': True})], {'b': {('2', '2')}})
-    ks._remove_node_by_name('1')
+    ks.remove_node_by_name('1')
 
     assert ks_expected.__eq__(ks)
 
 
-"""
 def test_remove_node_reflexive_edge():
     worlds = [World('1', {'p': True}), World('2', {'p': True})]
     relations = {('1', '2'), ('1', '1'), ('2', '2')}
     ks = KripkeStructure(worlds, relations)
     ks_expected = KripkeStructure([World('2', {'p': True})], {('2', '2')})
-    ks._remove_node_by_name('1')
+    ks.remove_node_by_name('1')
 
     assert ks_expected.__eq__(ks)
-"""
+
+
+def test_solve_with_model():
+    wise_men_model = WiseMenWithHat()
+    ks = wise_men_model.ks
+    ks_result = ks.solve(wise_men_model.implicit_knowledge_one)
+
+    worlds_expected = [
+        World('RRW', {'1:R': True, '2:R': True, '3:W': True}),
+        World('RRR', {'1:R': True, '2:R': True, '3:R': True}),
+        World('WRR', {'1:W': True, '2:R': True, '3:R': True}),
+
+        World('WWR', {'1:W': True, '2:W': True, '3:R': True}),
+        World('RWR', {'1:R': True, '2:W': True, '3:R': True}),
+        World('WRW', {'1:W': True, '2:R': True, '3:W': True}),
+    ]
+
+    relations_expected = {
+        '1': {('RRW', 'WRW'), ('RWR', 'WWR'), ('WRR', 'RRR')},
+        '2': {('RWR', 'RRR'), ('WRR', 'WWR')},
+        '3': {('RRR', 'RRW'), ('WRW', 'WRR')}
+    }
+
+    relations_expected.update(Model.add_reflexive_edges(worlds_expected, relations_expected))
+    relations_expected.update(Model.add_symmetric_edges(relations_expected))
+    ks_expected = KripkeStructure(worlds_expected, relations_expected)
+
+    assert ks_expected.__eq__(ks)

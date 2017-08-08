@@ -1,3 +1,5 @@
+import copy
+
 from itertools import chain, combinations
 
 
@@ -7,7 +9,7 @@ class KripkeStructure:
     """
 
     def __init__(self, worlds, relations):
-        if not isinstance(worlds, list) or isinstance(worlds[0], World):
+        if isinstance(worlds, list) or isinstance(worlds, dict):
             self.worlds = worlds
             self.relations = relations
         else:
@@ -15,23 +17,28 @@ class KripkeStructure:
 
     # Removes minimum sub set of nodes, therefore formula is satisfiable in each node of Kripke structure.
     def solve(self, formula):
-        # print(self.nodes_not_follow_formula(formula))#TODO
-        # print(self.__get_power_set_of_worlds__())  # TODO
-        ks = []
-        for i, subset in enumerate(self.__get_power_set_of_worlds__()):
-            ks.append(KripkeStructure(self.worlds, self.relations))
+
+        for i, subset in enumerate(self.get_power_set_of_worlds()):
+            ks = KripkeStructure(self.worlds.copy(), copy.deepcopy(self.relations))
+
             for element in subset:
-                ks[i]._remove_node_by_name(element)
-            print(ks[i].nodes_not_follow_formula(formula))  # TODO
-            print(subset)  # TODO
-            for w in ks[i].worlds:  # TODO
-                print(w.name)  # TODO
-            print()  # TODO
-            if ks[i].nodes_not_follow_formula(formula) == []:
-                return ks[i]
+                ks.remove_node_by_name(element)
+
+            for i in ks.worlds:  # TODO
+                print(i.name)  # TODO
+            print("----")  # TODO
+
+            for i, j in ks.relations.items():  # TODO
+                print(i)  # TODO
+                print(j)  # TODO
+
+            if ks.nodes_not_follow_formula(formula) == []:
+                self.relations = ks.relations
+                self.worlds = ks.worlds
+                return
 
     # Removes ONE node of Kripke frame, therefore we can make knowledge base consistent with announcement.
-    def _remove_node_by_name(self, node_name):
+    def remove_node_by_name(self, node_name):
 
         # make copy, because change while iteration
         for world in self.worlds.copy():
@@ -50,7 +57,7 @@ class KripkeStructure:
                         value.remove((start_node, end_node))
 
     # Returns a list with all possible sub sets of world names, sorted by ascending number of their elements.
-    def __get_power_set_of_worlds__(self):
+    def get_power_set_of_worlds(self):
         sub_set = [{}]
         worlds_by_name = []
 
@@ -64,11 +71,14 @@ class KripkeStructure:
     # Returns a list with all worlds of Kripke structure, where formula is not satisfiable
     def nodes_not_follow_formula(self, formula):
         nodes_not_follow_formula = []
+
         for nodes in self.worlds:
             if not formula.semantic(self, nodes.name):
                 nodes_not_follow_formula.append(nodes.name)
+
         return nodes_not_follow_formula
 
+    # Returns true iff two Kripke structures are equivalent
     def __eq__(self, other):
         for (i, j) in zip(self.worlds, other.worlds):
             if not i.__eq__(j):
