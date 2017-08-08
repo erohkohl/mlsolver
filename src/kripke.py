@@ -24,14 +24,6 @@ class KripkeStructure:
             for element in subset:
                 ks.remove_node_by_name(element)
 
-            for i in ks.worlds:  # TODO
-                print(i.name)  # TODO
-            print("----")  # TODO
-
-            for i, j in ks.relations.items():  # TODO
-                print(i)  # TODO
-                print(j)  # TODO
-
             if ks.nodes_not_follow_formula(formula) == []:
                 self.relations = ks.relations
                 self.worlds = ks.worlds
