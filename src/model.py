@@ -4,6 +4,8 @@ from src.formula import Atom, And, Not, Or, Box_a
 
 # Class models the Kripke structure of the "Three wise men example."
 class WiseMenWithHat():
+    knowledge_base = []
+
     def __init__(self):
         worlds = [
             World('RWW', {'1:R': True, '2:W': True, '3:W': True}),
@@ -29,19 +31,19 @@ class WiseMenWithHat():
         self.ks = KripkeStructure(worlds, relations)
 
         # Wise man ONE does not know whether he wears a red hat or not
-        self.announcement_one = And(Not(Box_a('1', Atom('1:R'))), Not(Box_a('1', Not(Atom('1:R')))))
+        self.knowledge_base.append(And(Not(Box_a('1', Atom('1:R'))), Not(Box_a('1', Not(Atom('1:R'))))))
 
         # This announcement implies that either second or third wise man wears a red hat.
-        self.implicit_knowledge_one = Or(Atom('2:R'), Atom('3:R'))
+        self.knowledge_base.append(Or(Atom('2:R'), Atom('3:R')))
 
         # Wise man TWO does not know whether he wears a red hat or not
-        self.announcement_two = And(Not(Box_a('2', Atom('2:R'))), Not(Box_a('2', Not(Atom('2:R')))))
+        self.knowledge_base.append(And(Not(Box_a('2', Atom('2:R'))), Not(Box_a('2', Not(Atom('2:R'))))))
 
         # This announcement implies that third men has be the one, who wears a red hat
-        self.implicit_knowledge_two = Box_a('3', Atom('3:R'))
+        self.knowledge_base.append(Box_a('3', Atom('3:R')))
 
         # Wise man three says YES, I know the color ouf my hat.
-        self.announcement_three = Atom('3:R')
+        self.knowledge_base.append(Atom('3:R'))
 
 
 # Routine adds symmetric edges to Kripke frame

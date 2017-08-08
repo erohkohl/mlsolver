@@ -127,7 +127,7 @@ def test_nodes_not_follow_formula():
 def test_solve_with_model():
     wise_men_model = WiseMenWithHat()
     ks = wise_men_model.ks
-    ks_result = ks.solve(wise_men_model.implicit_knowledge_one)
+    ks_result = ks.solve(wise_men_model.knowledge_base[1])
 
     worlds_expected = [
         World('RRW', {'1:R': True, '2:R': True, '3:W': True}),
