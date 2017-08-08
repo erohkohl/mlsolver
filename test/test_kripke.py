@@ -2,7 +2,7 @@ import pytest
 
 from src.kripke import KripkeStructure, World
 
-"""
+
 def test_kripke_structure_init():
     worlds = [World('1', {'p': True})]
     relations = {}
@@ -18,6 +18,7 @@ def test_ks_wrong_type():
         KripkeStructure([1], [])
     assert True
 
+
 def test_get_power_set_of_worlds():
     worlds = [World('1', {'p': True}), World('2', {'p': True}), World('3', {'p': True})]
     relations = {('1', '2'), ('1', '1'), ('2', '2')}
@@ -27,7 +28,6 @@ def test_get_power_set_of_worlds():
     result = ks.__get_power_set_of_worlds__();
     for i, j in zip(result, expected_result):
         assert i == j
-"""
 
 
 def test_eq_one_agent():
@@ -59,6 +59,13 @@ def test_eq_two_agents_not_eq():
     assert not ks_expected.__eq__(ks)
 
 
+def test_eq_empty_set():
+    ks_one = KripkeStructure([World('2', {'p': True})], {'a': set()})
+    ks_two = KripkeStructure([World('2', {'p': True})], {'a': set()})
+
+    assert ks_one.__eq__(ks_two)
+
+
 def test_remove_node_trivial_case():
     worlds = [World('1', {'p': True}), World('2', {'p': True})]
     relations = {('1', '2')}
@@ -73,13 +80,12 @@ def test_remove_node_one_agent():
     worlds = [World('1', {'p': True}), World('2', {'p': True})]
     relations = {'a': {('1', '2')}}
     ks = KripkeStructure(worlds, relations)
-    ks_expected = KripkeStructure([World('2', {'p': True})], {'a': {}})
+    ks_expected = KripkeStructure([World('2', {'p': True})], {'a': set()})
 
     ks._remove_node_by_name('1')
     assert ks_expected.__eq__(ks)
 
 
-"""
 def test_remove_node_trivial_case_two_agent():
     worlds = [World('1', {'p': True}), World('2', {'p': True})]
     relations = {'a': {('1', '2')}, 'b': {('2', '2')}}
@@ -88,7 +94,7 @@ def test_remove_node_trivial_case_two_agent():
     ks._remove_node_by_name('1')
 
     assert ks_expected.__eq__(ks)
-"""
+
 
 """
 def test_remove_node_reflexive_edge():

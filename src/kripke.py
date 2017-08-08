@@ -39,13 +39,15 @@ class KripkeStructure:
                 self.worlds.remove(world)
 
         if isinstance(self.relations, set):
-
             for (start_node, end_node) in self.relations.copy():
                 if start_node == node_name or end_node == node_name:
                     self.relations.remove((start_node, end_node))
 
         if isinstance(self.relations, dict):
-            self.relations = {}
+            for key, value in self.relations.items():
+                for (start_node, end_node) in value.copy():
+                    if start_node == node_name or end_node == node_name:
+                        value.remove((start_node, end_node))
 
     # Returns a list with all possible sub sets of world names, sorted by ascending number of their elements.
     def __get_power_set_of_worlds__(self):
@@ -83,7 +85,7 @@ class KripkeStructure:
                     if not value == other.relations[key]:
                         return False
                 except KeyError:
-                    if not value == {}:
+                    if not value == set():
                         return False
 
         return True
