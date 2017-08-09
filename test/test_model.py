@@ -41,7 +41,7 @@ def test_add_reflexive_edges_two_agents():
 def test_solve_with_model_first_ann():
     wise_men_model = WiseMenWithHat()
     ks = wise_men_model.ks
-    ks.solve(wise_men_model.knowledge_base[1])
+    model = ks.solve(wise_men_model.knowledge_base[1])
 
     worlds_expected = [
         World('RRW', {'1:R': True, '2:R': True, '3:W': True}),
@@ -63,14 +63,14 @@ def test_solve_with_model_first_ann():
     relations_expected.update(Model.add_symmetric_edges(relations_expected))
     ks_expected = KripkeStructure(worlds_expected, relations_expected)
 
-    assert ks_expected.__eq__(ks)
+    assert ks_expected.__eq__(model)
 
 
 def test_solve_with_model_second_ann():
     wise_men_model = WiseMenWithHat()
     ks = wise_men_model.ks
-    ks.solve(wise_men_model.knowledge_base[1])
-    ks.solve(wise_men_model.knowledge_base[4])
+    model = ks.solve(wise_men_model.knowledge_base[1])
+    model = model.solve(wise_men_model.knowledge_base[4])
 
     worlds_expected = [
         World('RRR', {'1:R': True, '2:R': True, '3:R': True}),
@@ -90,4 +90,4 @@ def test_solve_with_model_second_ann():
     relations_expected.update(Model.add_symmetric_edges(relations_expected))
     ks_expected = KripkeStructure(worlds_expected, relations_expected)
 
-    assert ks_expected.__eq__(ks)
+    assert ks_expected.__eq__(model)

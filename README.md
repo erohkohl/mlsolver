@@ -37,8 +37,15 @@ formula = Implies(
 assert True == formula.semantic(ks, '1')
 ```
 
+#### Modelchecking
+get KS with all worlds forces formula
+```python
+ks.solve(formula)
+```
+
+#### Modelling multimodal logic
 
 #### Example: Three wise men with hat
 
 #### Testdriven development
-<img src="./doc/tests.png" width="980">
+<img src="./doc/tests.png" width="670">

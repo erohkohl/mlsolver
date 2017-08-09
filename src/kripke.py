@@ -15,7 +15,7 @@ class KripkeStructure:
         else:
             raise TypeError
 
-    # Removes minimum sub set of nodes, therefore formula is satisfiable in each node of Kripke structure.
+    # Returns a Kripke structure with minimum sub set of nodes, that each of it's nodes forces a given formula.
     def solve(self, formula):
 
         for i, subset in enumerate(self.get_power_set_of_worlds()):
@@ -25,9 +25,7 @@ class KripkeStructure:
                 ks.remove_node_by_name(element)
 
             if ks.nodes_not_follow_formula(formula) == []:
-                self.relations = ks.relations
-                self.worlds = ks.worlds
-                return
+                return ks
 
     # Removes ONE node of Kripke frame, therefore we can make knowledge base consistent with announcement.
     def remove_node_by_name(self, node_name):
