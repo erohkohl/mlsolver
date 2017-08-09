@@ -40,7 +40,7 @@ assert True == formula.semantic(ks, '1')
 #### Modelchecking
 get KS with all worlds forces formula
 ```python
-ks.solve(formula)
+model = ks.solve(formula)
 ```
 
 #### Modelling multimodal logic
