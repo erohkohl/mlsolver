@@ -54,4 +54,4 @@ model = ks.solve(formula)
 $ py.test -v
 ```
 
-<img src="./doc/tests.png" width="830">
+<img src="./doc/tests.png" width="1030">
