@@ -4,8 +4,6 @@ setup(
     name='ai-modal-logic',
     packages=find_packages(),
     install_requires=[
-        'pytest',
-        'networkx',
-        'matplotlib'
+        'pytest'
     ]
 )
