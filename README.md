@@ -10,7 +10,7 @@ Provides a small framework for modelling ks and modal logic formulas
 #### Modelling Kripke structure
 TODO definition of kss
 
-<img src="./doc/ks_example.png" width="330">
+<img src="./doc/ks_example.png" width="300">
 
 ```python
 worlds = [
@@ -24,7 +24,8 @@ ks = KripkeStructure(worlds, relations)
 ```
 
 #### Describe modal logic formula and check it's semantic over one world
-<img src="./doc/formula_example.png" width="280">
+<img src="./doc/formula_example_2.png" width="250">
+
 ```python
 formula = Implies(
   Diamond(Atom('p')),
@@ -46,6 +47,11 @@ model = ks.solve(formula)
 #### Modelling multimodal logic
 
 #### Example: Three wise men with hat
+<img src="./doc/wise_men.png" width="580">
 
 #### Testdriven development
+```bash
+$ py.test -v
+```
+
 <img src="./doc/tests.png" width="670">
