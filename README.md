@@ -47,11 +47,11 @@ model = ks.solve(formula)
 #### Modelling multimodal logic
 
 #### Example: Three wise men with hat
-<img src="./doc/wise_men.png" width="580">
+<img src="./doc/wise_men.png" width="550">
 
 #### Testdriven development
 ```bash
 $ py.test -v
 ```
 
-<img src="./doc/tests.png" width="670">
+<img src="./doc/tests.png" width="630">

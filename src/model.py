@@ -34,17 +34,18 @@ class WiseMenWithHat():
         self.knowledge_base.append(And(Not(Box_a('1', Atom('1:R'))), Not(Box_a('1', Not(Atom('1:R'))))))
 
         # This announcement implies that either second or third wise man wears a red hat.
-        self.knowledge_base.append(Or(Atom('2:R'), Atom('3:R')))
+        self.knowledge_base.append(
+            And(
+                And(
+                    Box_a('1', Or(Atom('2:R'), Atom('3:R')))
+                    ,Box_a('2', Or(Atom('2:R'), Atom('3:R'))))
+                ,Box_a('3', Or(Atom('2:R'), Atom('3:R')))))
 
         # Wise man TWO does not know whether he wears a red hat or not
         self.knowledge_base.append(And(Not(Box_a('2', Atom('2:R'))), Not(Box_a('2', Not(Atom('2:R'))))))
 
         # This announcement implies that third men has be the one, who wears a red hat
         self.knowledge_base.append(Box_a('3', Atom('3:R')))
-
-        # Wise man three says YES, I know the color ouf my hat.
-        self.knowledge_base.append(Atom('3:R'))
-
 
 # Routine adds symmetric edges to Kripke frame
 def add_symmetric_edges(relations):

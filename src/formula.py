@@ -38,6 +38,15 @@ class Box_a():
         return result
 
 
+# TODO
+class Box_star():
+    def __init__(self, mlp):
+        self.mlp = mlp
+
+    def semantic(self, ks, world_to_test, depth=3):
+        pass
+
+
 # Describes diamond operator of modal logic formula and it's semantics
 class Diamond():
     def __init__(self, mlp):

@@ -1,6 +1,7 @@
 from src.kripke import World, KripkeStructure
 from src.model import WiseMenWithHat
 import src.model as Model
+from src.formula import Atom, Box, Or, Box_a, And
 
 
 def test_add_symmetric_edges():
@@ -70,7 +71,7 @@ def test_solve_with_model_second_ann():
     wise_men_model = WiseMenWithHat()
     ks = wise_men_model.ks
     model = ks.solve(wise_men_model.knowledge_base[1])
-    model = model.solve(wise_men_model.knowledge_base[4])
+    model = model.solve(wise_men_model.knowledge_base[3])
 
     worlds_expected = [
         World('RRR', {'1:R': True, '2:R': True, '3:R': True}),
