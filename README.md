@@ -24,7 +24,7 @@ ks = KripkeStructure(worlds, relations)
 ```
 
 #### Describe modal logic formula and check it's semantic over one world
-<img src="./doc/formula_example_2.png" width="250">
+<img src="./doc/formula_example.png" width="250">
 
 ```python
 formula = Implies(
