@@ -1,5 +1,5 @@
 from src.kripke import KripkeStructure, World
-from src.formula import Atom, And, Not, Or, Box_a
+from src.formula import Atom, And, Not, Or, Box_a, Box_star
 
 
 # Class models the Kripke structure of the "Three wise men example."
@@ -34,12 +34,7 @@ class WiseMenWithHat():
         self.knowledge_base.append(And(Not(Box_a('1', Atom('1:R'))), Not(Box_a('1', Not(Atom('1:R'))))))
 
         # This announcement implies that either second or third wise man wears a red hat.
-        self.knowledge_base.append(
-            And(
-                And(
-                    Box_a('1', Or(Atom('2:R'), Atom('3:R')))
-                    ,Box_a('2', Or(Atom('2:R'), Atom('3:R'))))
-                ,Box_a('3', Or(Atom('2:R'), Atom('3:R')))))
+        self.knowledge_base.append(Box_star(Or(Atom('2:R'), Atom('3:R'))))
 
         # Wise man TWO does not know whether he wears a red hat or not
         self.knowledge_base.append(And(Not(Box_a('2', Atom('2:R'))), Not(Box_a('2', Not(Atom('2:R'))))))

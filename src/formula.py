@@ -38,13 +38,19 @@ class Box_a():
         return result
 
 
-# TODO
+# Describes semantic of multi modal Box^* operator.
+# Semantic(Box_star phi) = min(Box Box ... Box phi, for all n in /N)
+# Simplification with n = 1: Box_star phi = phi and Box_a phi and Box_b phi ... and Box_n phi
 class Box_star():
     def __init__(self, mlp):
         self.mlp = mlp
 
-    def semantic(self, ks, world_to_test, depth=3):
-        pass
+    def semantic(self, ks, world_to_test, depth=1):
+        f = self.mlp
+        for agents in ks.relations:
+            f = And(f, Box_a(agents, self.mlp))
+
+        return f.semantic(ks, world_to_test)
 
 
 # Describes diamond operator of modal logic formula and it's semantics
