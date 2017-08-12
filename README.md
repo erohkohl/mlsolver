@@ -17,7 +17,7 @@ variable is true in one world, if it is in the world's assign sub set of variabl
 
 <img src="./doc/ks_example.png" width="300">
 
-The following code snipped shows, how you can‚ build the above Kripke structure. The Python syntax
+The following code snipped shows, how you can build the above Kripke structure. The Python syntax
 allows to model the transition relations of a Kripke frame very similar to it's mathematical description.
 To model a valid Kripke frame, you have to ensure, that each node name in the transition relation
 appears in the list of worlds.
@@ -63,9 +63,36 @@ to force the formula.
 model = ks.solve(formula)
 ```
 
+#### Modelling multimodal logic
+Further the framework extends the classic modal logic by the semantics of Box_a and Diamond_a operators for describing multi agent systems. You can find their implementation in the Pyhton file [src.fromula](https://github.com/erohkohl/ai-modal-logic/blob/master/src/formula.py). To use this operators it is necessary to build a Kripke structure with additional transition relation for each agent. To illustrate the usage of framework's multi modal logic implementation I implemented the *three wise men puzzle*.
 
+##### Example: Three wise men with hat
+The data model of this example is located in [src.model](https://github.com/erohkohl/ai-modal-logic/blob/master/src/model.py) and the Pyhton file [test_model.py](https://github.com/erohkohl/ai-modal-logic/blob/master/test/test_model.py) proves it's results.
 
-#### Testdriven development
+This puzzle is about three wise men, all of them wear either a red or a white hat. All in all there are two white and three red hats. Each wise men is only able to see the hats of his two neighbors and has to guess the color of his own hat. You can see the Kripke structure, that describes this knowledge base, in the picture below. For example the world name *RWW* denotes, that in this scenario the first wise man wears a red hat, the second and third wise men a white hat. The transition relation is defined by equivalence of two worlds for one agent. For example World *RWW* and *RRW* are equivalent for agent 2, because he can't distinguish these two possible scenarios.
+
+<img src="./doc/wise_men.png" width="550">
+
+This first wise man announces, that he doesn't know the color of his hat. This announcement implies, that either the second or third wise men has to wear a red hat. This first wise men would only be able to know the color of his hat, in case all of his neighbors wear white hats. Therefore we add the following formula to their knowledge base and apply it to the Kirpke structure.
+
+```python
+# First announcement implies, that second or third wise men wears a red hat
+f = Box_star(Or(Atom('2:R'), Atom('3:R')))
+model = ks.solve(f)
+```
+
+This model contains all worlds of the original Kirpke structure expect *WWW* and *RWW*. The second wise man admits, that he also doesn't know the color of his hat, although he know, that he or the third wise man has to wear a red hat. This announcement implies, that the third wise man knows his hat color. Thus the model of this formula only contains the green worlds.
+
+```python
+# First announcement implies, that second or third wise men wears a red hat
+g = Box_a('3', Atom('3:R')
+model = ks.solve(And(f, g))
+```
+
+#### Test-driven development
+
+While developing this framework I made use of the test-driven approach. Thus this repository contains 56 py.test test case to ensure, that the framework works as expected, and for documentation purpose. Before you are able to run all tests, make sure you have installed the setup.py, which only contains py.test as dependency.
+
 ```bash
 $ python setup.py install
 $ py.test -v
