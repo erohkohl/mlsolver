@@ -82,7 +82,6 @@ def test_remove_node_one_agent():
     relations = {'a': {('1', '2')}}
     ks = KripkeStructure(worlds, relations)
     ks_expected = KripkeStructure([World('2', {'p': True})], {'a': set()})
-
     ks.remove_node_by_name('1')
 
     assert ks_expected.__eq__(ks)
@@ -112,10 +111,8 @@ def test_nodes_not_follow_formula():
     worlds = [World('RWW', {'1:R': True, '2:W': True, '3:W': True}),
               World('RRW', {'1:R': True, '2:R': True, '3:W': True})]
     relations = {}
-
     ks = KripkeStructure(worlds, relations)
     formula = And(Atom('2:W'), Atom('3:W'))
-
     expected_result = ['RRW']
     result = ks.nodes_not_follow_formula(formula)
 

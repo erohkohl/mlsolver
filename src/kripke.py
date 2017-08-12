@@ -56,6 +56,7 @@ class KripkeStructure:
 
         for z in chain.from_iterable(combinations(worlds_by_name, r + 1) for r in range(len(worlds_by_name) + 1)):
             sub_set.append(set(z))
+
         return sub_set
 
     # Returns a list with all worlds of Kripke structure, where formula is not satisfiable

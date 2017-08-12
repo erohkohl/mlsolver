@@ -10,6 +10,7 @@ def test_semantic_box_a_empty_relations():
     relations = {}
     ks = KripkeStructure(worlds, relations)
     mpl = Diamond_a('a', Atom('p'))
+
     assert False == mpl.semantic(ks, '1')
 
 
@@ -21,6 +22,7 @@ def test_semantic_box_a_true():
     relations = {'a': {('1', '2'), ('1', '1')}}
     ks = KripkeStructure(worlds, relations)
     mpl = Diamond_a('a', Atom('p'))
+
     assert True == mpl.semantic(ks, '1')
 
 
@@ -32,6 +34,7 @@ def test_semantic_box_a_false():
     relations = {'a': {('1', '2')}}
     ks = KripkeStructure(worlds, relations)
     mpl = Diamond_a('a', Atom('p'))
+
     assert False == mpl.semantic(ks, '1')
 
 
@@ -43,4 +46,5 @@ def test_semantic_box_a_two_agents():
     relations = {'a': {('1', '2')}, 'b': {}}
     ks = KripkeStructure(worlds, relations)
     mpl = Diamond_a('b', Atom('p'))
+
     assert False == mpl.semantic(ks, '1')
