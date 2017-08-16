@@ -4,10 +4,7 @@ Framework for modelling Kripke structure and modal logic formula
 [![codecov](https://codecov.io/gh/erohkohl/ai-modal-logic/branch/master/graph/badge.svg)](https://codecov.io/gh/erohkohl/ai-modal-logic)
 
 This framework provides a tool for modelling Kripke structures, modal and multi modal
-logic formulas in Python. The aim of this framework is to describe the knowledge base
-of a multi agent system and its model, after one agent made an announcement. This
-knowledge base is mapped by a Kripke structure and one agents announcement is wrapped in
-a multi modal logic formula.
+logic formulas in **Python 3**. The aim of this framework is to describe the knowledge base of a multi agent system and its model, after one agent made an announcement. This knowledge base is mapped by a Kripke structure and one agents announcement is wrapped in a multi modal logic formula.
 
 #### Modelling Kripke structure
 A Kripke Frame describes a simple directed graph and its extension, Kripke structure,
@@ -85,7 +82,7 @@ model = ks.solve(And(f, g))
 
 #### Test-driven development
 
-While developing this framework I made use of the test-driven approach. Thus this repository contains 56 py.test case to ensure, that the framework works as expected, and for documentation purposes. Before you are able to run all tests, make sure you have installed the setup.py, which only contains py.test as dependency.
+While developing this framework I made use of the test-driven approach. Thus this repository contains 56 py.test case to ensure, that the framework works as expected, and for documentation purposes. Before you are able to run all tests, make sure you have installed the setup.py, which only contains py.test as dependency, and you use **Python 3**.
 
 ```bash
 $ python setup.py install
