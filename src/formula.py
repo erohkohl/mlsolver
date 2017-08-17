@@ -31,6 +31,14 @@ class Box():
 
         return result
 
+    # TODO
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # TODO
+    def __str__(self):
+        raise NotImplementedError
+
 
 # Describes box operator of modal logic formula and it's semantics for Agent a
 class Box_a():
@@ -45,6 +53,14 @@ class Box_a():
                 result = result and self.mlp.semantic(ks, relation[1])
 
         return result
+
+    # TODO
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # TODO
+    def __str__(self):
+        raise NotImplementedError
 
 
 # Describes semantic of multi modal Box^* operator.
@@ -61,6 +77,14 @@ class Box_star():
 
         return f.semantic(ks, world_to_test)
 
+    # TODO
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # TODO
+    def __str__(self):
+        raise NotImplementedError
+
 
 # Describes diamond operator of modal logic formula and it's semantics
 class Diamond():
@@ -74,6 +98,14 @@ class Diamond():
                 result = result or self.mlp.semantic(ks, relation[1])
 
         return result
+
+    # TODO
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # TODO
+    def __str__(self):
+        raise NotImplementedError
 
 
 # Describes diamond operator of modal logic formula and it's semantics for Agent a
@@ -90,6 +122,14 @@ class Diamond_a():
 
         return result
 
+    # TODO
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # TODO
+    def __str__(self):
+        raise NotImplementedError
+
 
 # Describes implication derived from classic propositional logic
 class Implies():
@@ -100,6 +140,14 @@ class Implies():
     def semantic(self, ks, world_to_test):
         return not self.left_mlp.semantic(ks, world_to_test) or self.right_mlp.semantic(ks, world_to_test)
 
+    # TODO
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # TODO
+    def __str__(self):
+        raise NotImplementedError
+
 
 # Describes negation derived from classic propositional logic
 class Not():
@@ -108,6 +156,14 @@ class Not():
 
     def semantic(self, ks, world_to_test):
         return not self.mlp.semantic(ks, world_to_test)
+
+    # TODO
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # TODO
+    def __str__(self):
+        raise NotImplementedError
 
 
 # Describes and derived from classic propositional logic
@@ -137,3 +193,11 @@ class Or():
 
     def semantic(self, ks, world_to_test):
         return self.left_mlp.semantic(ks, world_to_test) or self.right_mlp.semantic(ks, world_to_test)
+
+    # TODO
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # TODO
+    def __str__(self):
+        raise NotImplementedError
