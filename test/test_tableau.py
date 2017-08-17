@@ -10,7 +10,7 @@ def test_derive_first_atom():
 
     assert ks_expected == tree.derive()
 
-"""
+
 def test_derive_second_atom():
     f = Atom('q')
     tree = ProofTree(f)
@@ -18,7 +18,7 @@ def test_derive_second_atom():
 
     assert ks_expected == tree.derive()
 
-
+"""
 def test_derive_and():
     f = And(Atom('p'), Atom('q'))
     tree = ProofTree(f)

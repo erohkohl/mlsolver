@@ -1,5 +1,6 @@
 from src.kripke import *
-from src.formula import Atom
+from src.formula import Atom, And
+
 
 class ProofTree():
     """
@@ -18,6 +19,9 @@ class ProofTree():
 
         if isinstance(node.formula, Atom):
             self.ks.worlds.append(World(node.world_name, {node.formula.name: True}))
+
+        if isinstance(node.formula, And):
+            pass
 
         return self.ks
 
