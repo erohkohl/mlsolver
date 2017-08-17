@@ -1,3 +1,6 @@
+from src.tableau import Node
+
+
 # This class represents propositional logic variables in modal logic formulas
 class Atom():
     def __init__(self, name):
@@ -7,6 +10,12 @@ class Atom():
         for world in ks.worlds:
             if world.name == world_to_test:
                 return world.assignment.get(self.name, False)
+
+    def derive(self, world_name):
+        return True
+
+    def __eq__(self, other):
+        return isinstance(other, Atom) and other.name == self.name
 
 
 # Describes box operator of modal logic formula and it's semantics
@@ -109,6 +118,13 @@ class And():
 
     def semantic(self, ks, world_to_test):
         return self.left_mlp.semantic(ks, world_to_test) and self.right_mlp.semantic(ks, world_to_test)
+
+    def derive(self, world_name):
+        return (Node(world_name, self.left_mlp, [Node(world_name, self.right_mlp)]))
+
+    # TODO
+    def __eq__(self):
+        raise NotImplementedError
 
 
 # Describes or derived from classic propositional logic

@@ -15,6 +15,7 @@ def test_ks_one_world():
 
     assert True == atom.semantic(ks, '1')
 
+
 def test_atom_is_false_if_q_not_in_V():
     worlds = [World('1', {'p': True})]
     relations = {}
@@ -22,3 +23,9 @@ def test_atom_is_false_if_q_not_in_V():
     atom = Atom('q')
 
     assert False == atom.semantic(ks, '1')
+
+
+def test_derive_atom():
+    f = Atom('p')
+
+    assert f.derive('s')
