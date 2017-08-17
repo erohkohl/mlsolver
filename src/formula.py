@@ -1,9 +1,20 @@
-# This class represents propositional logic variables in modal logic formulas
-class Atom():
+"""Modal logic formula module
+
+This module unites all operators from propositional and modal logic.
+"""
+
+
+class Atom:
+    """
+    This class represents propositional logic variables in modal logic formulas.
+    """
+
     def __init__(self, name):
         self.name = name
 
     def semantic(self, ks, world_to_test):
+        """Function returns assignment of variable in Kripke's world.
+        """
         for world in ks.worlds:
             if world.name == world_to_test:
                 return world.assignment.get(self.name, False)
@@ -18,8 +29,11 @@ class Atom():
         return "Atom(" + self.name + ")"
 
 
-# Describes box operator of modal logic formula and it's semantics
-class Box():
+class Box:
+    """
+    Describes box operator of modal logic formula and it's semantics
+    """
+
     def __init__(self, mlp):
         self.mlp = mlp
 
@@ -28,7 +42,6 @@ class Box():
         for relation in ks.relations:
             if relation[0] == world_to_test:
                 result = result and self.mlp.semantic(ks, relation[1])
-
         return result
 
     # TODO
@@ -40,8 +53,11 @@ class Box():
         raise NotImplementedError
 
 
-# Describes box operator of modal logic formula and it's semantics for Agent a
-class Box_a():
+class Box_a:
+    """
+    Describes box operator of modal logic formula and it's semantics for Agent a
+    """
+
     def __init__(self, agent, mlp):
         self.mlp = mlp
         self.agent = agent
@@ -51,7 +67,6 @@ class Box_a():
         for relation in ks.relations.get(self.agent, {}):
             if relation[0] == world_to_test:
                 result = result and self.mlp.semantic(ks, relation[1])
-
         return result
 
     # TODO
@@ -63,10 +78,13 @@ class Box_a():
         raise NotImplementedError
 
 
-# Describes semantic of multi modal Box^* operator.
-# Semantic(Box_star phi) = min(Box Box ... Box phi, for all n in /N)
-# Simplification with n = 1: Box_star phi = phi and Box_a phi and Box_b phi ... and Box_n phi
-class Box_star():
+class Box_star:
+    """
+    Describes semantic of multi modal Box^* operator.
+    Semantic(Box_star phi) = min(Box Box ... Box phi, for all n in /N)
+    Simplification with n = 1: Box_star phi = phi and Box_a phi and Box_b phi ... and Box_n phi
+    """
+
     def __init__(self, mlp):
         self.mlp = mlp
 
@@ -74,7 +92,6 @@ class Box_star():
         f = self.mlp
         for agents in ks.relations:
             f = And(f, Box_a(agents, self.mlp))
-
         return f.semantic(ks, world_to_test)
 
     # TODO
@@ -86,8 +103,11 @@ class Box_star():
         raise NotImplementedError
 
 
-# Describes diamond operator of modal logic formula and it's semantics
-class Diamond():
+class Diamond:
+    """
+    Describes diamond operator of modal logic formula and it's semantics
+    """
+
     def __init__(self, mlp):
         self.mlp = mlp
 
@@ -96,7 +116,6 @@ class Diamond():
         for relation in ks.relations:
             if relation[0] == world_to_test:
                 result = result or self.mlp.semantic(ks, relation[1])
-
         return result
 
     # TODO
@@ -108,8 +127,11 @@ class Diamond():
         raise NotImplementedError
 
 
-# Describes diamond operator of modal logic formula and it's semantics for Agent a
-class Diamond_a():
+class Diamond_a:
+    """
+    Describes diamond operator of modal logic formula and it's semantics for Agent a
+    """
+
     def __init__(self, agent, mlp):
         self.mlp = mlp
         self.agent = agent
@@ -119,7 +141,6 @@ class Diamond_a():
         for relation in ks.relations.get(self.agent, {}):
             if relation[0] == world_to_test:
                 result = result or self.mlp.semantic(ks, relation[1])
-
         return result
 
     # TODO
@@ -131,8 +152,11 @@ class Diamond_a():
         raise NotImplementedError
 
 
-# Describes implication derived from classic propositional logic
-class Implies():
+class Implies:
+    """
+    Describes implication derived from classic propositional logic
+    """
+
     def __init__(self, left_mlp, right_mlp):
         self.left_mlp = left_mlp
         self.right_mlp = right_mlp
@@ -149,8 +173,11 @@ class Implies():
         raise NotImplementedError
 
 
-# Describes negation derived from classic propositional logic
-class Not():
+class Not:
+    """
+    Describes negation derived from classic propositional logic
+    """
+
     def __init__(self, mlp):
         self.mlp = mlp
 
@@ -166,8 +193,11 @@ class Not():
         raise NotImplementedError
 
 
-# Describes and derived from classic propositional logic
-class And():
+class And:
+    """
+    Describes and derived from classic propositional logic
+    """
+
     def __init__(self, left_mlp, right_mlp):
         self.left_mlp = left_mlp
         self.right_mlp = right_mlp
@@ -185,8 +215,11 @@ class And():
         return "And(" + self.left_mlp.__str__() + ", " + self.right_mlp.__str__() + ")"
 
 
-# Describes or derived from classic propositional logic
-class Or():
+class Or:
+    """
+    Describes or derived from classic propositional logic
+    """
+
     def __init__(self, left_mlp, right_mlp):
         self.left_mlp = left_mlp
         self.right_mlp = right_mlp

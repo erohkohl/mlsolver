@@ -1,8 +1,12 @@
+""" Modal logic tableau calculus module
+
+This module contains data structures to store the proof tree of modal logic's tableau calculus .
+"""
 from src.kripke import *
 from src.formula import Atom, And
 
 
-class ProofTree():
+class ProofTree:
     """
     TODO
     """
@@ -11,22 +15,20 @@ class ProofTree():
         self.nodes = [Node('s', formula)]  # Initial world s, False = not derived yet
         self.ks = KripkeStructure([], {})
 
-    # TODO
     def derive(self):
+        """Returns a valid Kripke structures if formula is satisfiable.
+        """
         node = self.nodes.pop()
         world_name, formula, children = node.formula.derive('s')
         node.children.append(Node(world_name, formula, children))
-
         if isinstance(node.formula, Atom):
             self.ks.worlds.append(World(node.world_name, {node.formula.name: True}))
-
         if isinstance(node.formula, And):
             pass
-
         return self.ks
 
 
-class Node():
+class Node:
     """
     TODO
     """

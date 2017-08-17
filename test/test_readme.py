@@ -19,5 +19,4 @@ def test_example_for_readme():
             Diamond(Atom('q'))
         )
     )
-
     assert True == formula.semantic(ks, '1')

@@ -6,18 +6,16 @@ from src.formula import Atom, Box, Or, Box_a, And
 
 def test_add_symmetric_edges():
     relations = {'1': {('a', 'b')}}
-    expected_realtions = {'1': {('a', 'b'), ('b', 'a')}}
+    expected_relations = {'1': {('a', 'b'), ('b', 'a')}}
     relations.update(Model.add_symmetric_edges(relations))
-
-    assert expected_realtions == relations
+    assert expected_relations == relations
 
 
 def test_add_symmetric_is_already():
     relations = {'1': {('a', 'b'), ('b', 'a')}}
-    expected_realtions = {'1': {('a', 'b'), ('b', 'a')}}
+    expected_relations = {'1': {('a', 'b'), ('b', 'a')}}
     relations.update(Model.add_symmetric_edges(relations))
-
-    assert expected_realtions == relations
+    assert expected_relations == relations
 
 
 def test_add_reflexive_edges_one_agent():
@@ -25,7 +23,6 @@ def test_add_reflexive_edges_one_agent():
     relations = {'1': {('WR', 'RW')}}
     expected_relations = {'1': {('WR', 'RW'), ('RW', 'RW'), ('WR', 'WR')}}
     relations = Model.add_reflexive_edges(worlds, relations)
-
     assert expected_relations == relations
 
 
@@ -35,7 +32,6 @@ def test_add_reflexive_edges_two_agents():
     expected_relations = {'1': {('WR', 'RW'), ('WR', 'WR'), ('RW', 'RW')},
                           '2': {('RW', 'WR'), ('RW', 'RW'), ('WR', 'WR')}}
     relations = Model.add_reflexive_edges(worlds, relations)
-
     assert expected_relations == relations
 
 
@@ -63,7 +59,6 @@ def test_solve_with_model_first_ann():
     relations_expected.update(Model.add_reflexive_edges(worlds_expected, relations_expected))
     relations_expected.update(Model.add_symmetric_edges(relations_expected))
     ks_expected = KripkeStructure(worlds_expected, relations_expected)
-
     assert ks_expected.__eq__(model)
 
 
@@ -90,5 +85,4 @@ def test_solve_with_model_second_ann():
     relations_expected.update(Model.add_reflexive_edges(worlds_expected, relations_expected))
     relations_expected.update(Model.add_symmetric_edges(relations_expected))
     ks_expected = KripkeStructure(worlds_expected, relations_expected)
-
     assert ks_expected.__eq__(model)

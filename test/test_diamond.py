@@ -9,7 +9,6 @@ def test_semantic_diamond_p_one_world_true():
     mpl = Diamond(
         Atom('p')
     )
-
     assert False == mpl.semantic(ks, '1')
 
 
@@ -20,7 +19,6 @@ def test_semantic_diamond_p_one_world_false():
     mpl = Diamond(
         Atom('p')
     )
-
     assert False == mpl.semantic(ks, '1')
 
 
@@ -31,7 +29,6 @@ def test_semantic_diamond_p_one_world_reflex_edge_true():
     mpl = Diamond(
         Atom('p')
     )
-
     assert True == mpl.semantic(ks, '1')
 
 
@@ -42,7 +39,6 @@ def test_semantic_diamond_p_one_world_reflex_edge_false():
     mpl = Diamond(
         Atom('p')
     )
-
     assert False == mpl.semantic(ks, '1')
 
 
@@ -56,7 +52,6 @@ def test_semantic_diamond_p_two_worlds_true():
     mpl = Diamond(
         Atom('p')
     )
-
     assert True == mpl.semantic(ks, '1')
 
 
@@ -70,7 +65,6 @@ def test_semantic_diamond_p_two_worlds_false():
     mpl = Diamond(
         Atom('p')
     )
-
     assert False == mpl.semantic(ks, '1')
 
 
@@ -85,7 +79,6 @@ def test_semantic_diamond_p_three_worlds_true():
     mpl = Diamond(
         Atom('p')
     )
-
     assert True == mpl.semantic(ks, '1')
 
 
@@ -100,5 +93,4 @@ def test_semantic_diamond_p_three_worlds_false():
     mpl = Diamond(
         Atom('p')
     )
-
     assert True == mpl.semantic(ks, '1')

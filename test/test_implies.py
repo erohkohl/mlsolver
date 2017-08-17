@@ -11,5 +11,4 @@ def test_semantic_box_p_implies_p():
     relations = {('1', '2'), ('1', '3')}
     ks = KripkeStructure(worlds, relations)
     mpl = Implies(Box(Atom('p')), Atom('p'))
-
     assert False == mpl.semantic(ks, '1')

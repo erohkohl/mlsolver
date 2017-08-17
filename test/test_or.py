@@ -10,5 +10,4 @@ def test_semantic_p_or_q():
     relations = {('1', '2'), ('1', '3')}
     ks = KripkeStructure(worlds, relations)
     mpl = Or(Atom('p'), Atom('q'))
-
     assert True == mpl.semantic(ks, '1')

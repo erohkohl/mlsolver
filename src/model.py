@@ -1,9 +1,18 @@
+""" Three wise men puzzle
+
+Module contains data model for three wise men puzzle as Kripke strukture and agents announcements as modal logic
+formulas
+"""
+
 from src.kripke import KripkeStructure, World
 from src.formula import Atom, And, Not, Or, Box_a, Box_star
 
 
-# Class models the Kripke structure of the "Three wise men example."
-class WiseMenWithHat():
+class WiseMenWithHat:
+    """
+    Class models the Kripke structure of the "Three wise men example.
+    """
+
     knowledge_base = []
 
     def __init__(self):
@@ -42,8 +51,10 @@ class WiseMenWithHat():
         # This announcement implies that third men has be the one, who wears a red hat
         self.knowledge_base.append(Box_a('3', Atom('3:R')))
 
-# Routine adds symmetric edges to Kripke frame
+
 def add_symmetric_edges(relations):
+    """Routine adds symmetric edges to Kripke frame
+    """
     result = {}
     for agent, agents_relations in relations.items():
         result_agents = agents_relations.copy()
@@ -54,8 +65,9 @@ def add_symmetric_edges(relations):
     return result
 
 
-# Routine adds reflexive edges to Kripke frame
 def add_reflexive_edges(worlds, relations):
+    """Routine adds reflexive edges to Kripke frame
+    """
     result = {}
     for agent, agents_relations in relations.items():
         result_agents = agents_relations.copy()
