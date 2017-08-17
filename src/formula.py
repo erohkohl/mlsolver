@@ -26,7 +26,7 @@ class Atom:
         return isinstance(other, Atom) and other.name == self.name
 
     def __str__(self):
-        return "Atom(" + self.name + ")"
+        return "Atom(" + str(self.name) + ")"
 
 
 class Box:
