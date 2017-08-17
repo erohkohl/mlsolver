@@ -71,6 +71,9 @@ class KripkeStructure:
 
     # Returns true iff two Kripke structures are equivalent
     def __eq__(self, other):
+        if (self.worlds == [] and not other.worlds == []) or (not self.worlds == [] and other.worlds == []):
+            return False
+
         for (i, j) in zip(self.worlds, other.worlds):
             if not i.__eq__(j):
                 return False

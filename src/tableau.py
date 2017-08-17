@@ -1,5 +1,5 @@
 from src.kripke import *
-
+from src.formula import Atom
 
 class ProofTree():
     """
@@ -8,14 +8,18 @@ class ProofTree():
 
     def __init__(self, formula):
         self.nodes = [Node('s', formula)]  # Initial world s, False = not derived yet
+        self.ks = KripkeStructure([], {})
 
     # TODO
     def derive(self):
         node = self.nodes.pop()
+        world_name, formula, children = node.formula.derive('s')
+        node.children.append(Node(world_name, formula, children))
 
-        node.children.append(node.formula.derive('s'))
+        if isinstance(node.formula, Atom):
+            self.ks.worlds.append(World(node.world_name, {node.formula.name: True}))
 
-        return KripkeStructure([World(node.world_name, {node.formula.name: True})], {})
+        return self.ks
 
 
 class Node():

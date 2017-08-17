@@ -67,6 +67,13 @@ def test_eq_empty_set():
     assert ks_one.__eq__(ks_two)
 
 
+def test_eq_empty_one_empty_world():
+    ks_one = KripkeStructure([World('s', {'p': True})], {})
+    ks_two = KripkeStructure([], {})
+
+    assert not ks_one == ks_two
+
+
 def test_remove_node_trivial_case():
     worlds = [World('1', {'p': True}), World('2', {'p': True})]
     relations = {('1', '2')}
