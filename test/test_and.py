@@ -22,7 +22,7 @@ def test_derive_and_two_args():
 def test_derive_and_three_args():
     f = And(Atom('r'), And(Atom('p'), Atom('q')))
 
-    _ , formula_one, children_one = f.derive('s')
+    _, formula_one, children_one = f.derive('s')
     world_name, formula_two, children_two = formula_one.derive('s')
     children_two.append(children_one)
     assert world_name == 's'

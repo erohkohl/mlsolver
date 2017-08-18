@@ -184,13 +184,14 @@ class Not:
     def semantic(self, ks, world_to_test):
         return not self.mlp.semantic(ks, world_to_test)
 
-    # TODO
-    def __eq__(self, other):
-        raise NotImplementedError
+    def derive(self, world_name):
+        return world_name, self, [(world_name, self.mlp)]
 
-    # TODO
+    def __eq__(self, other):
+        return self.mlp == other.mlp
+
     def __str__(self):
-        raise NotImplementedError
+        return "Not(" + str(self.mlp) + ")"
 
 
 class And:

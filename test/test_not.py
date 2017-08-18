@@ -10,3 +10,10 @@ def test_semantic_not_q():
     ks = KripkeStructure(worlds, relations)
     mpl = Not(Atom('q'))
     assert True == mpl.semantic(ks, '1')
+
+
+def test_derive_not():
+    f = Not(Atom('p'))
+    expected = 's', Not(Atom('p')), [('s', Atom('p'))]
+    result = f.derive('s')
+    assert result == expected

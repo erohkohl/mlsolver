@@ -3,7 +3,7 @@
 This module contains data structures to store the proof tree of modal logic's tableau calculus .
 """
 from src.kripke import *
-from src.formula import Atom, And
+from src.formula import Atom, And, Not
 
 
 class ProofTree:
@@ -12,18 +12,22 @@ class ProofTree:
     """
 
     def __init__(self, formula):
-        self.nodes = [Node('s', formula)]  # Initial world s, False = not derived yet
+        self.root_node = Node('s', formula)  # Initial world s, False = not derived yet
         self.ks = KripkeStructure([], {})
 
     def derive(self):
         """Returns a valid Kripke structures if formula is satisfiable.
         """
-        node = self.nodes.pop()
-        world_name, formula, children = node.formula.derive('s')
-        node.children.append(Node(world_name, formula, children))
-        if isinstance(node.formula, Atom):
-            self.ks.worlds.append(World(node.world_name, {node.formula.name: True}))
-        if isinstance(node.formula, And):
+        world_name, formula, children = self.root_node.formula.derive('s')
+        self.root_node.children.append(Node(world_name, formula, children))
+
+        if isinstance(self.root_node.formula, Atom):  # TODO not Pythonic -> try
+            self.ks.worlds.append(World(self.root_node.world_name, {self.root_node.formula.name: True}))
+        if isinstance(self.root_node.formula, And):  # TODO not Pythonic
+            self.ks.worlds.append(
+                World(self.root_node.world_name,
+                      {self.root_node.formula.left_mlp.name: True, self.root_node.formula.right_mlp.name: True}))
+        if isinstance(self.root_node.formula, Not):
             pass
         return self.ks
 
