@@ -35,6 +35,16 @@ def test_derive_and_two_args_correct_tree():
     assert tree_expected == tree.root_node
 
 
+def test_derive_and_two_args_incorrect_tree():
+    f = And(Atom('p'), Atom('q'))
+    tree = ProofTree(f)
+    tree_expected = Node('s', And(Atom('p'), Atom('q')),
+                         [Node('s', Atom('p'),
+                               [Node('s', Atom('q'), []), Node('s', Atom('p'), [])])])
+    tree.derive()
+    assert not tree_expected == tree.root_node
+
+
 def test_derive_and_true_correct_ks():
     f = And(Atom('p'), Atom('q'))
     tree = ProofTree(f)

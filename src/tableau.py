@@ -44,10 +44,15 @@ class Node:
         self.children = children
 
     def __eq__(self, other):
+        are_children_eq = True
+
+        for (self_child, other_child) in zip(self.children, other.children):
+            are_children_eq = are_children_eq and self_child == other_child
+
         return self.world_name == other.world_name \
                and self.formula == other.formula \
                and self.is_derived == other.is_derived \
-               and self.children == self.children
+               and are_children_eq
 
 
 class Bottom(Node):
