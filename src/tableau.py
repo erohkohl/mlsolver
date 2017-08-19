@@ -23,10 +23,12 @@ class ProofTree:
 
         if isinstance(self.root_node.formula, Atom):  # TODO not Pythonic -> try
             self.ks.worlds.append(World(self.root_node.world_name, {self.root_node.formula.name: True}))
+
         if isinstance(self.root_node.formula, And):  # TODO not Pythonic
             self.ks.worlds.append(
                 World(self.root_node.world_name,
                       {self.root_node.formula.left_mlp.name: True, self.root_node.formula.right_mlp.name: True}))
+
         if isinstance(self.root_node.formula, Not):
             pass
         return self.ks
@@ -45,6 +47,9 @@ class Node:
 
     def __eq__(self, other):
         are_children_eq = True
+
+        if not len(self.children) == len(other.children):
+            return False
 
         for (self_child, other_child) in zip(self.children, other.children):
             are_children_eq = are_children_eq and self_child == other_child
