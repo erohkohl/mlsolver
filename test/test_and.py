@@ -1,5 +1,6 @@
 from src.formula import Atom, And
 from src.kripke import KripkeStructure, World
+from src.tableau import Node
 
 
 def test_semantic_p_and_q():
@@ -14,17 +15,13 @@ def test_semantic_p_and_q():
 
 def test_derive_and_two_args():
     f = And(Atom('p'), Atom('q'))
-    expected = 's', Atom('p'), [('s', Atom('q'))]
+    expected = Node('s', Atom('p'), [Node('s', Atom('q'))])
     result = f.derive('s')
     assert result == expected
 
 
 def test_derive_and_three_args():
     f = And(Atom('r'), And(Atom('p'), Atom('q')))
-
-    _, formula_one, children_one = f.derive('s')
-    world_name, formula_two, children_two = formula_one.derive('s')
-    children_two.append(children_one)
-    assert world_name == 's'
-    assert formula_one == Atom('r')
-    assert children_two[0][0][1] == And(Atom('p'), Atom('q'))
+    result_node = f.derive('s')
+    expected_node= Node('s', Atom('r'), [Node('s', And(Atom('p'), Atom('q')), [])])
+    assert result_node == expected_node

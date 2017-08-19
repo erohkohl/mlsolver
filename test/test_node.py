@@ -1,5 +1,5 @@
 from src.tableau import Node
-from src.formula import Atom, Not
+from src.formula import Atom, Not, And
 
 
 def test_node_is_eq_trivial_case():
@@ -73,3 +73,11 @@ def test_not_eq_depth_three_dif_encaps():
         Node('s', Atom('p'), [
             Node('s', Atom('r'), [])])])
     assert not node_one == node_two
+
+
+def test_eq_depth_three_with_and():
+    node_one = Node('s', And(Atom('p'), Atom('q')),
+                         [Node('s', Atom('p'),
+                               [Node('s', Atom('q'), [])])])
+    node_two = node_one
+    assert node_one == node_two
