@@ -181,19 +181,19 @@ class Not:
     """
 
     def __init__(self, mlp):
-        self.mlp = mlp
+        self.not_mlp = mlp
 
     def semantic(self, ks, world_to_test):
-        return not self.mlp.semantic(ks, world_to_test)
+        return not self.not_mlp.semantic(ks, world_to_test)
 
     def derive(self, world_name):
-        return world_name, self, [(world_name, self.mlp)]
+        return Node(world_name, self.not_mlp, [])
 
     def __eq__(self, other):
-        return self.mlp == other.mlp
+        return self.not_mlp == other.not_mlp
 
     def __str__(self):
-        return "Not(" + str(self.mlp) + ")"
+        return "Not(" + str(self.not_mlp) + ")"
 
 
 class And:

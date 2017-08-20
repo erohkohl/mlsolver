@@ -51,10 +51,18 @@ def test_derive_and_true_correct_ks():
     ks_expected = KripkeStructure([World('s', {'q': True, 'p': True})], {})
     assert ks_expected == tree.derive()
 
-"""
+
 def test_derive_and_false_correct_ks():
-    f = And(Atom('p'), Not(Atom('q')))
+    f = Not(Atom('q'))
     tree = ProofTree(f)
-    ks_expected = KripkeStructure([World('s', {'p': True})], {})
+    ks_expected = KripkeStructure([World('s', {'q': False})], {})
     assert ks_expected == tree.derive()
-"""
+
+
+def test_derive_and_false_correct_tree():
+    f = Not(Atom('q'))
+    tree = ProofTree(f)
+    tree_expected = Node('s', Not(Atom('q')), [
+        Node('s', Atom('q'), [])])
+    tree.derive()
+    assert tree_expected == tree.root_node

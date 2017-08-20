@@ -18,14 +18,24 @@ class ProofTree:
         """Returns a valid Kripke structures if formula is satisfiable.
         """
         derived_node = self.root_node.formula.derive('s')
-        try:  # Pythonic
-            self.ks.worlds.append(World(self.root_node.world_name, {self.root_node.formula.name: True}))
+        try:  # Duck typing
+            self.ks.worlds.append(
+                World(self.root_node.world_name,
+                      {self.root_node.formula.name: True}))
         except:
             pass
         try:
-            self.ks.worlds.append(World(self.root_node.world_name,
-                                        {self.root_node.formula.left_mlp.name: True,
-                                         self.root_node.formula.right_mlp.name: True}))
+            self.ks.worlds.append(
+                World(self.root_node.world_name,
+                      {self.root_node.formula.left_mlp.name: True,
+                       self.root_node.formula.right_mlp.name: True}))
+            self.root_node.children.append(derived_node)
+        except:
+            pass
+        try:
+            self.ks.worlds.append(
+                World(self.root_node.world_name,
+                      {self.root_node.formula.not_mlp.name: False}))
             self.root_node.children.append(derived_node)
         except:
             pass
