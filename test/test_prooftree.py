@@ -5,7 +5,7 @@ from src.formula import *
 def test_derive_atom_correct_tree():
     f = Atom('q')
     tree = ProofTree(f)
-    tree_expected = Node('s', Atom('q'), [None])
+    tree_expected = Node('s', Atom('q'), [])
     tree_expected.is_derived = True
     tree.derive()
     assert tree_expected == tree.root_node

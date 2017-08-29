@@ -14,26 +14,16 @@ class ProofTree:
     def __init__(self, formula):
         self.root_node = Node('s', formula, [])
 
-
     def derive(self):
         """Returns a valid Kripke structures if formula is satisfiable.
         """
         next_node = self.root_node.__next__()
-        node_to_add = self.expand_node(next_node)
-        next_node.add_child(node_to_add)
-        next_node.is_derived = True
 
-        next_node = self.root_node.__next__()
-        node_to_add = self.expand_node(next_node)
-        next_node.add_child(node_to_add)
-        next_node.is_derived = True
-
-        next_node = self.root_node.__next__()
-        node_to_add = self.expand_node(next_node)
-        next_node.add_child(node_to_add)
-        next_node.is_derived = True
-
-
+        while not next_node == None:
+            node_to_add = self.expand_node(next_node)
+            next_node.add_child(node_to_add)
+            next_node.is_derived = True
+            next_node = self.root_node.__next__()
 
     def expand_node(self, node):
         if isinstance(node.formula, Atom):
