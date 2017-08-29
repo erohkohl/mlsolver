@@ -12,9 +12,3 @@ def test_semantic_not_q():
     mpl = Not(Atom('q'))
     assert True == mpl.semantic(ks, '1')
 
-
-def test_derive_not():
-    f = Not(Atom('p'))
-    expected = Node('s', Atom('p'), [])
-    result = f.derive('s')
-    assert result == expected

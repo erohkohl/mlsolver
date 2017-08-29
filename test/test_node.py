@@ -89,33 +89,33 @@ def test_eq_node_none():
 
 
 def test_next_atom_is_derived():
-    node = Node('s', Atom('p'))
+    node = Node('s', Atom('p'), [])
     node.is_derived = True
     next_node = node.__next__()
     assert next_node == None
 
 
 def test_next_atom_not_derived():
-    node = Node('s', Atom('p'))
+    node = Node('s', Atom('p'), [])
     next_node = node.__next__()
     assert next_node is node
 
 
 def test_next_and_not_derived():
-    node = Node('s', And(Atom('p'), Atom('q')))
+    node = Node('s', And(Atom('p'), Atom('q')), [])
     next_node = node.__next__()
     assert next_node is node
 
 
-def test_next_and_is_derived():
-    node = Node('s', And(Atom('p'), Atom('q')), [Node('s', Atom('p'), [Node('s', Atom('q'))])])
+def test_next_and_is_derived_depth_one():
+    node = Node('s', And(Atom('p'), Atom('q')), [Node('s', Atom('p'), [Node('s', Atom('q'), [])])])
     node.is_derived = True;
     next_node = node.__next__()
     assert next_node is node.children[0]
 
 
-def test_next_and_is_derived():
-    node = Node('s', And(Atom('p'), Atom('q')), [Node('s', Atom('p'), [Node('s', Atom('q'))])])
+def test_next_and_is_derived_depth_two():
+    node = Node('s', And(Atom('p'), Atom('q')), [Node('s', Atom('p'), [Node('s', Atom('q'), [])])])
     node.is_derived = True;
     next_node = node.__next__()
     next_node.is_derived = True
