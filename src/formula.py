@@ -3,8 +3,6 @@
 This module unites all operators from propositional and modal logic.
 """
 
-from src.tableau import Node
-
 
 class Atom:
     """
@@ -20,9 +18,6 @@ class Atom:
         for world in ks.worlds:
             if world.name == world_to_test:
                 return world.assignment.get(self.name, False)
-
-    def derive(self, world_name):
-        return Node(world_name, self, [])
 
     def __eq__(self, other):
         return isinstance(other, Atom) and other.name == self.name
@@ -186,9 +181,6 @@ class Not:
     def semantic(self, ks, world_to_test):
         return not self.not_mlp.semantic(ks, world_to_test)
 
-    def derive(self, world_name):
-        return Node(world_name, self.not_mlp, [])
-
     def __eq__(self, other):
         return self.not_mlp == other.not_mlp
 
@@ -207,9 +199,6 @@ class And:
 
     def semantic(self, ks, world_to_test):
         return self.left_mlp.semantic(ks, world_to_test) and self.right_mlp.semantic(ks, world_to_test)
-
-    def derive(self, world_name):
-        return Node(world_name, self.left_mlp, [Node(world_name, self.right_mlp, [])])
 
     def __eq__(self, other):
         return self.left_mlp == other.left_mlp and self.right_mlp == other.right_mlp

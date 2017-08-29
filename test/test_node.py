@@ -77,7 +77,47 @@ def test_not_eq_depth_three_dif_encaps():
 
 def test_eq_depth_three_with_and():
     node_one = Node('s', And(Atom('p'), Atom('q')),
-                         [Node('s', Atom('p'),
-                               [Node('s', Atom('q'), [])])])
+                    [Node('s', Atom('p'),
+                          [Node('s', Atom('q'), [])])])
     node_two = node_one
     assert node_one == node_two
+
+
+def test_eq_node_none():
+    node = Node('s', Atom('p'), [])
+    assert not node == None
+
+
+def test_next_atom_is_derived():
+    node = Node('s', Atom('p'))
+    node.is_derived = True
+    next_node = node.__next__()
+    assert next_node == None
+
+
+def test_next_atom_not_derived():
+    node = Node('s', Atom('p'))
+    next_node = node.__next__()
+    assert next_node is node
+
+
+def test_next_and_not_derived():
+    node = Node('s', And(Atom('p'), Atom('q')))
+    next_node = node.__next__()
+    assert next_node is node
+
+
+def test_next_and_is_derived():
+    node = Node('s', And(Atom('p'), Atom('q')), [Node('s', Atom('p'), [Node('s', Atom('q'))])])
+    node.is_derived = True;
+    next_node = node.__next__()
+    assert next_node is node.children[0]
+
+
+def test_next_and_is_derived():
+    node = Node('s', And(Atom('p'), Atom('q')), [Node('s', Atom('p'), [Node('s', Atom('q'))])])
+    node.is_derived = True;
+    next_node = node.__next__()
+    next_node.is_derived = True
+    next_node = node.__next__()
+    assert next_node is node.children[0].children[0]
