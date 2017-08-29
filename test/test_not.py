@@ -11,4 +11,3 @@ def test_semantic_not_q():
     ks = KripkeStructure(worlds, relations)
     mpl = Not(Atom('q'))
     assert True == mpl.semantic(ks, '1')
-
