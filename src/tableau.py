@@ -2,7 +2,6 @@
 
 This module contains data structures to store the proof tree of modal logic's tableau calculus .
 """
-from src.kripke import *
 from src.formula import *
 
 
@@ -21,30 +20,57 @@ class ProofTree:
 
         while not next_node == None:
             node_to_add = self.expand_node(next_node)
-            next_node.add_child(node_to_add)
+            leaf = self.root_node.get_leaf()
+            leaf.add_child(node_to_add)
             next_node.is_derived = True
             next_node = self.root_node.__next__()
 
     def expand_node(self, node):
         if isinstance(node.formula, Atom):
             return None
+        if isinstance(node.formula, Not):
+            node_to_add = Node('s', node.formula.not_mlp, [])
         if isinstance(node.formula, And):
             node_to_add = Node('s', node.formula.left_mlp, [Node('s', node.formula.right_mlp, [])])
         return node_to_add
 
 
 class Node():
+    """
+    Todo
+    """
+
     def __init__(self, world_name, formula, children):
         self.world_name = world_name
-        self.formula = formula
         self.children = children
-        self.is_derived = False
+
+        # Todo refactor with factory that returns normal node or leaf
+        if isinstance(formula, Atom):
+            self.variable_name = formula.name
+            self.assignment = True
+            self.is_derived = True
+        elif isinstance(formula, Not) and isinstance(formula.not_mlp, Atom):
+            self.variable_name = formula.not_mlp.name
+            self.assignment = False
+            self.is_derived = True
+        else:
+            self.formula = formula
+            self.is_derived = False
 
     def add_child(self, node):
         """TODO
         """
         if not node == None:
             self.children.append(node)
+
+    def get_leaf(self):
+        """Todo
+        """
+        if self.children == []:
+            return self
+        else:
+            for child in self.children:
+                return child.get_leaf()
 
     def __iter__(self):
         return self
@@ -73,7 +99,15 @@ class Node():
         for (self_child, other_child) in zip(self.children, other.children):
             are_children_eq = are_children_eq and self_child == other_child
 
-        return self.world_name == other.world_name \
-               and self.is_derived == other.is_derived \
-               and self.formula == other.formula \
-               and are_children_eq
+        try:
+            return self.world_name == other.world_name \
+                   and self.is_derived == other.is_derived \
+                   and self.formula == other.formula \
+                   and are_children_eq
+        except:
+            return self.world_name == other.world_name \
+                   and other.is_derived \
+                   and self.is_derived \
+                   and self.assignment == other.assignment \
+                   and self.variable_name == other.variable_name \
+                   and are_children_eq
