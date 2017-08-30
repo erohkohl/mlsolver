@@ -11,14 +11,14 @@ class ProofTree:
     """
 
     def __init__(self, formula):
-        self.root_node = Node('s', formula, [])
+        self.root_node = create_node('s', formula, [])
 
     def derive(self):
         """Returns a valid Kripke structures if formula is satisfiable.
         """
         next_node = self.root_node.__next__()
 
-        while not next_node == None:
+        while not next_node is None:
             node_to_add = self.expand_node(next_node)
             leaf = self.root_node.get_leaf()
             leaf.add_child(node_to_add)
@@ -29,10 +29,23 @@ class ProofTree:
         if isinstance(node.formula, Atom):
             return None
         if isinstance(node.formula, Not):
-            node_to_add = Node('s', node.formula.not_mlp, [])
+            node_to_add = Node('s', node.formula.not_mlp, [])  # Todo
         if isinstance(node.formula, And):
-            node_to_add = Node('s', node.formula.left_mlp, [Node('s', node.formula.right_mlp, [])])
+            inner_node = create_node('s', node.formula.right_mlp, [])
+            node_to_add = create_node('s', node.formula.left_mlp, [inner_node])
         return node_to_add
+
+
+def create_node(world_name, formula, children):
+    """Routine decides whether a node must be a leaf node, when it is not derivable further, or a classical node.
+    """
+    if isinstance(formula, Atom):
+        return Leaf(world_name, formula.name, children, True)
+    elif isinstance(formula, Not) and isinstance(formula.not_mlp, Atom):
+        return Leaf(world_name, formula.not_mlp.name, children, False)
+    else:
+        return Node(world_name, formula, children)
+    return None
 
 
 class Node():
@@ -43,28 +56,17 @@ class Node():
     def __init__(self, world_name, formula, children):
         self.world_name = world_name
         self.children = children
-
-        # Todo refactor with factory that returns normal node or leaf
-        if isinstance(formula, Atom):
-            self.variable_name = formula.name
-            self.assignment = True
-            self.is_derived = True
-        elif isinstance(formula, Not) and isinstance(formula.not_mlp, Atom):
-            self.variable_name = formula.not_mlp.name
-            self.assignment = False
-            self.is_derived = True
-        else:
-            self.formula = formula
-            self.is_derived = False
+        self.formula = formula
+        self.is_derived = False
 
     def add_child(self, node):
         """TODO
         """
-        if not node == None:
+        if not node is None:
             self.children.append(node)
 
     def get_leaf(self):
-        """Todo
+        """Returns list of nodes, which each node has no children.
         """
         if self.children == []:
             return self
@@ -90,7 +92,7 @@ class Node():
 
     def __eq__(self, other):
         are_children_eq = True
-        if other == None:
+        if other is None:
             return False
 
         if not len(self.children) == len(other.children):
@@ -99,15 +101,27 @@ class Node():
         for (self_child, other_child) in zip(self.children, other.children):
             are_children_eq = are_children_eq and self_child == other_child
 
-        try:
-            return self.world_name == other.world_name \
-                   and self.is_derived == other.is_derived \
-                   and self.formula == other.formula \
-                   and are_children_eq
-        except:
-            return self.world_name == other.world_name \
-                   and other.is_derived \
-                   and self.is_derived \
-                   and self.assignment == other.assignment \
-                   and self.variable_name == other.variable_name \
-                   and are_children_eq
+        return self.world_name == other.world_name \
+               and self.is_derived == other.is_derived \
+               and self.formula == other.formula \
+               and are_children_eq
+
+
+class Leaf(Node):
+    """
+    This class does not map a leaf of a tree in sense, that it has no children. Moreover it completely derived, thus
+    is stores only propositional variables and their negations.
+    """
+
+    def __init__(self, world_name, variable_name, children, assignment):
+        super().__init__(world_name, None, children)
+        self.variable_name = variable_name
+        self.assignment = assignment
+        self.is_derived = True
+
+    def __eq__(self, other):
+        return self.is_derived \
+               and other.is_derived \
+               and self.assignment == other.assignment \
+               and self.variable_name == other.variable_name \
+               and super().__eq__(other)

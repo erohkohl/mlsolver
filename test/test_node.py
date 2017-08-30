@@ -1,4 +1,4 @@
-from src.tableau import Node
+from src.tableau import Node, Leaf
 from src.formula import Atom, Not, And
 
 
@@ -96,7 +96,7 @@ def test_next_atom_is_derived():
 
 
 def test_next_atom_not_derived():
-    node = Node('s', Atom('p'), [])
+    node = Leaf('s', 'p', [], True)
     next_node = node.__next__()
     assert next_node is None
 
@@ -108,7 +108,7 @@ def test_next_and_not_derived():
 
 
 def test_next_and_is_derived():
-    node = Node('s', And(Atom('p'), Atom('q')), [Node('s', Atom('p'), [Node('s', Atom('q'), [])])])
+    node = Node('s', And(Atom('p'), Atom('q')), [Leaf('s', 'p', [Leaf('s', 'q', [], True)], True)])
     node.is_derived = True;
     next_node = node.__next__()
     assert next_node is None
