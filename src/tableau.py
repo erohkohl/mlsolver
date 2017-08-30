@@ -109,8 +109,8 @@ class Node():
 
 class Leaf(Node):
     """
-    This class does not map a leaf of a tree in sense, that it has no children. Moreover it completely derived, thus
-    is stores only propositional variables and their negations.
+    This class does not map a leaf of a tree in sense, that it has no children. Moreover this leaf is completely derived,
+    thus it stores only propositional variables or their negations.
     """
 
     def __init__(self, world_name, variable_name, children, assignment):
