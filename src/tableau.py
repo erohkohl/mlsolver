@@ -30,15 +30,28 @@ class ProofTree:
     def expand_node(self, node):
         if isinstance(node.formula, Atom):
             return None
+
         if isinstance(node.formula, Not):
+            formula = node.formula.not_mlp
+            if isinstance(formula, Implies):
+                inner_node = create_node('s', Not(formula.right_mlp), [])
+                return create_node('s', formula.left_mlp, [inner_node])
             return create_node('s', node.formula.not_mlp, [])
+
         if isinstance(node.formula, And):
             inner_node = create_node('s', node.formula.right_mlp, [])
             return create_node('s', node.formula.left_mlp, [inner_node])
+
         if isinstance(node.formula, Or):
             first_node = create_node('s', node.formula.left_mlp, [])
             second_node = create_node('s', node.formula.right_mlp, [])
             return [first_node, second_node]
+
+        if isinstance(node.formula, Implies):
+            first_node = create_node('s', Not(node.formula.left_mlp), [])
+            second_node = create_node('s', node.formula.right_mlp, [])
+            return [first_node, second_node]
+
         return None
 
 

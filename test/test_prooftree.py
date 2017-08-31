@@ -2,7 +2,7 @@ from src.tableau import *
 from src.formula import *
 
 
-def test_derive_atom_correct_tree():
+def test_derive_atom():
     f = Atom('q')
     tree = ProofTree(f)
     tree.derive()
@@ -11,7 +11,7 @@ def test_derive_atom_correct_tree():
     assert tree_expected == tree.root_node
 
 
-def test_derive_and_correct_tree():
+def test_derive_and():
     f = And(Atom('p'), Atom('q'))
     tree = ProofTree(f)
     tree.derive()
@@ -24,7 +24,7 @@ def test_derive_and_correct_tree():
     assert tree_expected == tree.root_node
 
 
-def test_derive_not_correct_tree():
+def test_derive_not():
     f = Not(Atom('p'))
     tree = ProofTree(f)
     tree.derive()
@@ -33,7 +33,7 @@ def test_derive_not_correct_tree():
     assert tree_expected == tree.root_node
 
 
-def test_derive_p_and_not_q_correct_tree():
+def test_derive_p_and_not_q():
     f = And(Atom('p'), Not(Atom('q')))
     tree = ProofTree(f)
     tree.derive()
@@ -46,7 +46,7 @@ def test_derive_p_and_not_q_correct_tree():
     assert tree_expected == tree.root_node
 
 
-def test_derive_p_and_q_and_r_correct_tree():
+def test_derive_p_and_q_and_r():
     f = And(And(Atom('p'), Atom('q')), Atom('r'))
     tree = ProofTree(f)
     tree.derive()
@@ -62,7 +62,7 @@ def test_derive_p_and_q_and_r_correct_tree():
     assert tree_expected == tree.root_node
 
 
-def test_derive_or_correct_tree():
+def test_derive_or():
     f = Or(Atom('p'), Atom('q'))
     tree = ProofTree(f)
     tree.derive()
@@ -75,7 +75,7 @@ def test_derive_or_correct_tree():
     assert tree_expected == tree.root_node
 
 
-def test_derive_p_or_not_q_correct_tree():
+def test_derive_p_or_not_q():
     f = Or(Atom('p'), Not(Atom('q')))
     tree = ProofTree(f)
     tree.derive()
@@ -88,7 +88,7 @@ def test_derive_p_or_not_q_correct_tree():
     assert tree_expected == tree.root_node
 
 
-def test_derive_not_p_or_q_correct_tree():
+def test_derive_not_p_or_q():
     f = Not(Or(Atom('p'), (Atom('q'))))
     tree = ProofTree(f)
     tree.derive()
@@ -103,7 +103,7 @@ def test_derive_not_p_or_q_correct_tree():
     assert tree_expected == tree.root_node
 
 
-def test_derive_p_or_q_and_r_correct_tree():
+def test_derive_p_or_q_and_r():
     f = And(Or(Atom('p'), Atom('q')), Atom('r'))
     tree = ProofTree(f)
     tree.derive()
@@ -114,6 +114,32 @@ def test_derive_p_or_q_and_r_correct_tree():
     node_one = Node('s', Or(Atom('p'), Atom('q')), [leaf_r])
     node_one.is_derived = True
     tree_expected = Node('s', And(Or(Atom('p'), Atom('q')), Atom('r')), [node_one])
+    tree_expected.is_derived = True
+
+    assert tree_expected == tree.root_node
+
+
+def test_derive_p_implies_q():
+    f = Implies(Atom('p'), Atom('q'))
+    tree = ProofTree(f)
+    tree.derive()
+
+    node_three = Leaf('s', 'q', [], True)
+    node_two = Leaf('s', 'p', [], False)
+    tree_expected = Node('s', Implies(Atom('p'), Atom('q')), [node_two, node_three])
+    tree_expected.is_derived = True
+
+    assert tree_expected == tree.root_node
+
+
+def test_derive_not_p_implies_q():
+    f = Not(Implies(Atom('p'), Atom('q')))
+    tree = ProofTree(f)
+    tree.derive()
+
+    node_three = Leaf('s', 'q', [], False)
+    node_two = Leaf('s', 'p', [node_three], True)
+    tree_expected = Node('s', Not(Implies(Atom('p'), Atom('q'))), [node_two])
     tree_expected.is_derived = True
 
     assert tree_expected == tree.root_node
