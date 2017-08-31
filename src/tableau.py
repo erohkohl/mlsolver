@@ -1,6 +1,7 @@
-""" Modal logic tableau calculus module
+"""Modal logic tableau calculus module
 
-This module contains data structures to store the proof tree of modal logic's tableau calculus .
+This module contains data structures to store the proof tree
+of modal logic's tableau calculus.
 """
 from src.formula import *
 
@@ -29,15 +30,16 @@ class ProofTree:
         if isinstance(node.formula, Atom):
             return None
         if isinstance(node.formula, Not):
-            node_to_add = Node('s', node.formula.not_mlp, [])  # Todo
+            return create_node('s', node.formula.not_mlp, [])
         if isinstance(node.formula, And):
             inner_node = create_node('s', node.formula.right_mlp, [])
-            node_to_add = create_node('s', node.formula.left_mlp, [inner_node])
-        return node_to_add
+            return create_node('s', node.formula.left_mlp, [inner_node])
+        return None
 
 
 def create_node(world_name, formula, children):
-    """Routine decides whether a node must be a leaf node, when it is not derivable further, or a classical node.
+    """Routine decides whether a node must be a leaf node, when it is not
+    derivable further, or a classical node.
     """
     if isinstance(formula, Atom):
         return Leaf(world_name, formula.name, children, True)
@@ -109,8 +111,9 @@ class Node():
 
 class Leaf(Node):
     """
-    This class does not map a leaf of a tree in sense, that it has no children. Moreover this leaf is completely derived,
-    thus it stores only propositional variables or their negations.
+    This class does not map a leaf of a tree in sense, that it has no children.
+    Moreover this leaf is completely derived, thus it stores only propositional
+    variables or their negations.
     """
 
     def __init__(self, world_name, variable_name, children, assignment):
