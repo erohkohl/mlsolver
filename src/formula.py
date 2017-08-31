@@ -221,7 +221,7 @@ class Or:
 
     # TODO
     def __eq__(self, other):
-        raise NotImplementedError
+        return self.left_mlp == other.left_mlp and self.right_mlp == other.right_mlp
 
     # TODO
     def __str__(self):

@@ -1,14 +1,15 @@
 """Modal logic tableau calculus module
 
-This module contains data structures to store the proof tree
-of modal logic's tableau calculus.
+This module contains data structures to store the proof tree of modal logic's
+tableau calculus.
 """
 from src.formula import *
 
 
+# Todo delete class ProofTree and make its methods top level of this module?!
 class ProofTree:
     """
-    TODO
+    Todo
     """
 
     def __init__(self, formula):
@@ -21,7 +22,7 @@ class ProofTree:
 
         while not next_node is None:
             node_to_add = self.expand_node(next_node)
-            leaf = self.root_node.get_leaf()
+            leaf = self.root_node.get_leaf()  # Todo add multiple leaf support
             leaf.add_child(node_to_add)
             next_node.is_derived = True
             next_node = self.root_node.__next__()
@@ -34,6 +35,10 @@ class ProofTree:
         if isinstance(node.formula, And):
             inner_node = create_node('s', node.formula.right_mlp, [])
             return create_node('s', node.formula.left_mlp, [inner_node])
+        if isinstance(node.formula, Or):
+            first_node = create_node('s', node.formula.left_mlp, [])
+            second_node = create_node('s', node.formula.right_mlp, [])
+            return [first_node, second_node]
         return None
 
 
@@ -50,9 +55,11 @@ def create_node(world_name, formula, children):
     return None
 
 
-class Node():
+class Node:
     """
-    Todo
+    Class represents one node of the proof tree. Therefore it holds one
+    world name, its children and a modal logic formula. The property is_
+    derived is true, when this node was processed by the solver.
     """
 
     def __init__(self, world_name, formula, children):
@@ -62,9 +69,13 @@ class Node():
         self.is_derived = False
 
     def add_child(self, node):
-        """TODO
+        """Routine adds one child node or list of children to the current
+         instance.
         """
-        if not node is None:
+        if isinstance(node, list):
+            for n in node:
+                self.children.append(n)
+        elif not node is None:
             self.children.append(node)
 
     def get_leaf(self):
@@ -82,7 +93,7 @@ class Node():
     def __next__(self):
         """Return next node, that is not derived yet in post order sequence
         """
-        if self.is_derived == False:
+        if self.is_derived is False:
             return self
         else:
             for child in self.children:
