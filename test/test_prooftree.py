@@ -180,10 +180,22 @@ def test_derive_not_p_and_q():
     assert tree_expected == tree.root_node
 
 
-def test_derive_not_p_and_q():
+def test_derive_multiple_leafs():
     f = And(Or(Atom('p'), Atom('q'))
             , Not(Implies(Atom('p'), Atom('q'))))
     tree = ProofTree(f)
     tree.derive()
 
-    assert False
+    node_not_q = Leaf('s', 'q', [], False)
+    node_p = Leaf('s', 'p', [node_not_q], True)
+    node_left = Leaf('s', 'p', [node_p], True)
+    node_right = Leaf('s', 'q', [node_p], True)
+    node_implies = Node('s', Not(Implies(Atom('p'), Atom('q'))), [node_left, node_right])
+    node_implies.is_derived = True
+    node_or = Node('s', Or(Atom('p'), Atom('q')), [node_implies])
+    node_or.is_derived = True
+    node_root = Node('s', And(Or(Atom('p'), Atom('q')),
+                              Not(Implies(Atom('p'), Atom('q')))), [node_or])
+    node_root.is_derived = True;
+
+    assert node_root == tree.root_node
