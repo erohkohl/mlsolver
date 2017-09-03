@@ -143,3 +143,27 @@ def test_derive_not_p_implies_q():
     tree_expected.is_derived = True
 
     assert tree_expected == tree.root_node
+
+
+def test_not_not_p():
+    f = Not(Not(Atom('p')))
+    tree = ProofTree(f)
+    tree.derive()
+
+    child_node = Leaf('s', 'p', [], True)
+    tree_expected = Node('s', Not(Not(Atom('p'))), [child_node])
+    tree_expected.is_derived = True
+
+    assert tree_expected == tree.root_node
+
+
+def test_not_not_not_p():
+    f = Not(Not(Not(Atom('p'))))
+    tree = ProofTree(f)
+    tree.derive()
+
+    child_node = Leaf('s', 'p', [], False)
+    tree_expected = Node('s', Not(Not(Not(Atom('p')))), [child_node])
+    tree_expected.is_derived = True
+
+    assert tree_expected == tree.root_node

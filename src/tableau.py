@@ -28,11 +28,15 @@ class ProofTree:
             next_node = self.root_node.__next__()
 
     def expand_node(self, node):
+        """Contains all rules of tableau calculus and tries to match them to a node
+        """
         if isinstance(node.formula, Atom):
             return None
 
         if isinstance(node.formula, Not):
             formula = node.formula.not_mlp
+            if isinstance(formula, Not):
+                return create_node('s', formula.not_mlp, [])
             if isinstance(formula, Implies):
                 inner_node = create_node('s', Not(formula.right_mlp), [])
                 return create_node('s', formula.left_mlp, [inner_node])
