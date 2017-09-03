@@ -20,10 +20,11 @@ class ProofTree:
         """
         next_node = self.root_node.__next__()
 
-        while not next_node is None:
+        while next_node is not None:
             node_to_add = self.expand_node(next_node)
-            leaf = self.root_node.get_leaf()  # Todo add multiple leaf support
-            leaf.add_child(node_to_add)
+            leafs = next_node.get_all_leafs()
+            for leaf in leafs:
+                leaf.add_child(node_to_add)
             next_node.is_derived = True
             next_node = self.root_node.__next__()
 
@@ -102,14 +103,19 @@ class Node:
         elif not node is None:
             self.children.append(node)
 
-    def get_leaf(self):
+    def get_all_leafs(self):
         """Returns list of nodes, which each node has no children.
         """
+        leafs = []
+
         if self.children == []:
-            return self
+            leafs.append(self)
         else:
             for child in self.children:
-                return child.get_leaf()
+                for child_leafs in child.get_all_leafs():
+                    leafs.append(child_leafs)
+                    # return leafs
+        return leafs
 
     def __iter__(self):
         return self

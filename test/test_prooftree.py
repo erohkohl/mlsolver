@@ -179,7 +179,7 @@ def test_derive_not_p_and_q():
 
     assert tree_expected == tree.root_node
 
-"""
+
 def test_derive_not_p_and_q():
     f = And(Or(Atom('p'), Atom('q'))
             , Not(Implies(Atom('p'), Atom('q'))))
@@ -187,4 +187,3 @@ def test_derive_not_p_and_q():
     tree.derive()
 
     assert False
-"""
