@@ -40,6 +40,10 @@ class ProofTree:
             if isinstance(formula, Or):
                 inner_node = create_node('s', Not(formula.right_mlp), [])
                 return create_node('s', Not(formula.left_mlp), [inner_node])
+            if isinstance(formula, And):
+                first_node = create_node('s', Not(formula.left_mlp), [])
+                second_node = create_node('s', Not(formula.right_mlp), [])
+                return [first_node, second_node]
             if isinstance(formula, Implies):
                 inner_node = create_node('s', Not(formula.right_mlp), [])
                 return create_node('s', formula.left_mlp, [inner_node])
