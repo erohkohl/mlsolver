@@ -88,21 +88,6 @@ def test_derive_p_or_not_q():
     assert tree_expected == tree.root_node
 
 
-def test_derive_not_p_or_q():
-    f = Not(Or(Atom('p'), (Atom('q'))))
-    tree = ProofTree(f)
-    tree.derive()
-
-    node_three = Leaf('s', 'q', [], True)
-    node_two = Leaf('s', 'p', [], True)
-    node_one = Node('s', Or(Atom('p'), Atom('q')), [node_two, node_three])
-    node_one.is_derived = True
-    tree_expected = Node('s', Not(Or(Atom('p'), Atom('q'))), [node_one])
-    tree_expected.is_derived = True
-
-    assert tree_expected == tree.root_node
-
-
 def test_derive_p_or_q_and_r():
     f = And(Or(Atom('p'), Atom('q')), Atom('r'))
     tree = ProofTree(f)
@@ -164,6 +149,19 @@ def test_not_not_not_p():
 
     child_node = Leaf('s', 'p', [], False)
     tree_expected = Node('s', Not(Not(Not(Atom('p')))), [child_node])
+    tree_expected.is_derived = True
+
+    assert tree_expected == tree.root_node
+
+
+def test_not_p_or_q():
+    f = Not(Or(Atom('p'), Atom('q')))
+    tree = ProofTree(f)
+    tree.derive()
+
+    leaf_q = Leaf('s', 'q', [], False)
+    leaf_p = Leaf('s', 'p', [leaf_q], False)
+    tree_expected = Node('s', Not(Or(Atom('p'), Atom('q'))), [leaf_p])
     tree_expected.is_derived = True
 
     assert tree_expected == tree.root_node

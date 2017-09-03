@@ -37,6 +37,9 @@ class ProofTree:
             formula = node.formula.not_mlp
             if isinstance(formula, Not):
                 return create_node('s', formula.not_mlp, [])
+            if isinstance(formula, Or):
+                inner_node = create_node('s', Not(formula.right_mlp), [])
+                return create_node('s', Not(formula.left_mlp), [inner_node])
             if isinstance(formula, Implies):
                 inner_node = create_node('s', Not(formula.right_mlp), [])
                 return create_node('s', formula.left_mlp, [inner_node])
