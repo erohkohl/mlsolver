@@ -3,10 +3,11 @@
 This module contains data structures to store the proof tree of modal logic's
 tableau calculus.
 """
+import copy
+
 from src.formula import *
 
 
-# Todo delete class ProofTree and make its methods top level of this module?!
 class ProofTree:
     """
     Todo
@@ -28,6 +29,8 @@ class ProofTree:
             next_node.is_derived = True
             next_node = self.root_node.__next__()
 
+        check_conflict(self.root_node)
+
     def expand_node(self, node):
         """Contains all rules of tableau calculus and tries to match them to a node
         """
@@ -35,36 +38,52 @@ class ProofTree:
             return None
 
         if isinstance(node.formula, Not):
-            formula = node.formula.not_mlp
+            formula = node.formula.inner
             if isinstance(formula, Not):
-                return create_node('s', formula.not_mlp, [])
+                return create_node('s', formula.inner, [])
             if isinstance(formula, Or):
-                inner_node = create_node('s', Not(formula.right_mlp), [])
-                return create_node('s', Not(formula.left_mlp), [inner_node])
+                inner_node = create_node('s', Not(formula.right), [])
+                return create_node('s', Not(formula.left), [inner_node])
             if isinstance(formula, And):
-                first_node = create_node('s', Not(formula.left_mlp), [])
-                second_node = create_node('s', Not(formula.right_mlp), [])
+                first_node = create_node('s', Not(formula.left), [])
+                second_node = create_node('s', Not(formula.right), [])
                 return [first_node, second_node]
             if isinstance(formula, Implies):
-                inner_node = create_node('s', Not(formula.right_mlp), [])
-                return create_node('s', formula.left_mlp, [inner_node])
+                inner_node = create_node('s', Not(formula.right), [])
+                return create_node('s', formula.left, [inner_node])
             return create_node('s', formula, [])
 
         if isinstance(node.formula, And):
-            inner_node = create_node('s', node.formula.right_mlp, [])
-            return create_node('s', node.formula.left_mlp, [inner_node])
+            inner_node = create_node('s', node.formula.right, [])
+            return create_node('s', node.formula.left, [inner_node])
 
         if isinstance(node.formula, Or):
-            first_node = create_node('s', node.formula.left_mlp, [])
-            second_node = create_node('s', node.formula.right_mlp, [])
+            first_node = create_node('s', node.formula.left, [])
+            second_node = create_node('s', node.formula.right, [])
             return [first_node, second_node]
 
         if isinstance(node.formula, Implies):
-            first_node = create_node('s', Not(node.formula.left_mlp), [])
-            second_node = create_node('s', node.formula.right_mlp, [])
+            first_node = create_node('s', Not(node.formula.left), [])
+            second_node = create_node('s', node.formula.right, [])
             return [first_node, second_node]
 
         return None
+
+def check_conflict(node):
+    """Routine walks through each node and checks whether leafs force
+    conflict with partial assignment
+    """
+
+    if isinstance(node, Leaf):
+        try:
+            if not node.partial_assign[node.variable_name] == node.assign:
+                node.children = Bottom()
+                return
+        except:
+            node.partial_assign[node.variable_name] = node.assign
+    for child in node.children:
+        child.partial_assign.update(copy.deepcopy(node.partial_assign)) # Todo remove deepcopy?
+        check_conflict(child)
 
 
 def create_node(world_name, formula, children):
@@ -73,8 +92,8 @@ def create_node(world_name, formula, children):
     """
     if isinstance(formula, Atom):
         return Leaf(world_name, formula.name, children, True)
-    elif isinstance(formula, Not) and isinstance(formula.not_mlp, Atom):
-        return Leaf(world_name, formula.not_mlp.name, children, False)
+    elif isinstance(formula, Not) and isinstance(formula.inner, Atom):
+        return Leaf(world_name, formula.inner.name, children, False)
     else:
         return Node(world_name, formula, children)
     return None
@@ -92,6 +111,7 @@ class Node:
         self.children = children
         self.formula = formula
         self.is_derived = False
+        self.partial_assign = dict()
 
     def add_child(self, node):
         """Routine adds one child node or list of children to the current
@@ -114,7 +134,6 @@ class Node:
             for child in self.children:
                 for child_leafs in child.get_all_leafs():
                     leafs.append(child_leafs)
-                    # return leafs
         return leafs
 
     def __iter__(self):
@@ -125,6 +144,8 @@ class Node:
         """
         if self.is_derived is False:
             return self
+        if isinstance(self.children, Bottom) or isinstance(self, Bottom):
+            return None
         else:
             for child in self.children:
                 if not child.is_derived:
@@ -138,7 +159,9 @@ class Node:
         if other is None:
             return False
 
-        if not len(self.children) == len(other.children):
+        if isinstance(self.children, Bottom) or isinstance(other.children, Bottom):
+            return self.children == other.children
+        elif not len(self.children) == len(other.children):
             return False
 
         for (self_child, other_child) in zip(self.children, other.children):
@@ -157,15 +180,34 @@ class Leaf(Node):
     variables or their negations.
     """
 
-    def __init__(self, world_name, variable_name, children, assignment):
+    def __init__(self, world_name, variable_name, children, assign):
         super().__init__(world_name, None, children)
+        # name of variable
         self.variable_name = variable_name
-        self.assignment = assignment
+        self.assign = assign
         self.is_derived = True
 
     def __eq__(self, other):
-        return self.is_derived \
+        return super().__eq__(other) \
+               and self.is_derived \
                and other.is_derived \
-               and self.assignment == other.assignment \
-               and self.variable_name == other.variable_name \
-               and super().__eq__(other)
+               and self.assign == other.assign \
+               and self.variable_name == other.variable_name
+
+
+class Bottom(Node):
+    """
+    Marks one branch of proof tree as conflict, therefore an instance of this class
+    will be assigned to the children of a Leaf node
+    """
+
+    def __init__(self):
+        self.is_derived = True
+        self.children = None
+
+    def __eq__(self, other):
+        try:
+            return self.is_derived and other.is_derived \
+                   and self.children is None and other.children is None
+        except:
+            return False

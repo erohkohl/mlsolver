@@ -176,26 +176,62 @@ def test_derive_not_p_and_q():
     leaf_p = Leaf('s', 'p', [], False)
     tree_expected = Node('s', Not(Or(Atom('p'), Atom('q'))), [leaf_p, leaf_q])
     tree_expected.is_derived = True
-
     assert tree_expected == tree.root_node
 
 
+# Todo
+"""
 def test_derive_multiple_leafs():
     f = And(Or(Atom('p'), Atom('q'))
             , Not(Implies(Atom('p'), Atom('q'))))
     tree = ProofTree(f)
     tree.derive()
 
+    node_not_q_bottom = Leaf('s', 'q', Bottom, False)
+    node_p_bottom = Leaf('s', 'q', [node_not_q_bottom], True)
+    node_right = Leaf('s', 'q', [node_p_bottom], True)
+
     node_not_q = Leaf('s', 'q', [], False)
     node_p = Leaf('s', 'p', [node_not_q], True)
     node_left = Leaf('s', 'p', [node_p], True)
-    node_right = Leaf('s', 'q', [node_p], True)
+
     node_implies = Node('s', Not(Implies(Atom('p'), Atom('q'))), [node_left, node_right])
     node_implies.is_derived = True
     node_or = Node('s', Or(Atom('p'), Atom('q')), [node_implies])
     node_or.is_derived = True
     node_root = Node('s', And(Or(Atom('p'), Atom('q')),
                               Not(Implies(Atom('p'), Atom('q')))), [node_or])
-    node_root.is_derived = True;
+    node_root.is_derived = True
 
     assert node_root == tree.root_node
+"""
+
+
+def test_derive_p_or_not_p_check_part_assign():
+    f = Or(Atom('p'), Not(Atom('p')))
+    tree = ProofTree(f)
+    tree.derive()
+
+    child_one = tree.root_node.children[0]
+    child_two = tree.root_node.children[1]
+
+    assert child_one.partial_assign['p'] is True
+    assert child_two.partial_assign['p'] is False
+
+
+def test_derive_p_and_q_or_not_p_check_part_assign():
+    f = And(Atom('p'), Or(Atom('q'), Not(Atom('p'))))
+    tree = ProofTree(f)
+    tree.derive()
+
+    child_one = tree.root_node.children[0]
+    child_two = child_one.children[0]
+    child_two_q = child_two.children[0]
+    child_two_not_p = child_two.children[1]
+
+    assert child_one.partial_assign['p'] is True
+    assert child_two.partial_assign['p'] is True
+    assert child_two_q.partial_assign['p'] is True
+    assert child_two_q.partial_assign['q'] is True
+    assert child_two_not_p.partial_assign['p'] is True  # Branch contains bottom symbol
+    assert isinstance(child_two_not_p.children, Bottom)
