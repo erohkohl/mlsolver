@@ -22,10 +22,9 @@ class ProofTree:
         next_node = self.root_node.__next__()
 
         while next_node is not None:
-            node_to_add = self.expand_node(next_node)
             leafs = next_node.get_all_leafs()
             for leaf in leafs:
-                leaf.add_child(node_to_add)
+                leaf.add_child(self.expand_node(next_node))
             next_node.is_derived = True
             next_node = self.root_node.__next__()
 
@@ -69,6 +68,7 @@ class ProofTree:
 
         return None
 
+
 def check_conflict(node):
     """Routine walks through each node and checks whether leafs force
     conflict with partial assignment
@@ -76,13 +76,13 @@ def check_conflict(node):
 
     if isinstance(node, Leaf):
         try:
-            if not node.partial_assign[node.variable_name] == node.assign:
+            if not node.partial_assign[node.variable_name] is node.assign:
                 node.children = Bottom()
                 return
         except:
             node.partial_assign[node.variable_name] = node.assign
     for child in node.children:
-        child.partial_assign.update(copy.deepcopy(node.partial_assign)) # Todo remove deepcopy?
+        child.partial_assign.update(copy.deepcopy(node.partial_assign))
         check_conflict(child)
 
 
@@ -186,6 +186,7 @@ class Leaf(Node):
         self.variable_name = variable_name
         self.assign = assign
         self.is_derived = True
+        self.partial_assign = dict()  # Todo remove
 
     def __eq__(self, other):
         return super().__eq__(other) \
