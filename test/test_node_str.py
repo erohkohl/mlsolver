@@ -12,7 +12,7 @@ def test_str_p_or_q_and_not_p_implies_q():
                    '           |\n' + \
                    '           |\n' + \
                    '       (p or q)\n' + \
-   		           '           |\n' + \
+                   '           |\n' + \
                    '           |\n' + \
                    '      not(p -> q)\n' + \
                    '           |\n' + \
