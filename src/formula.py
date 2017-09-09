@@ -23,7 +23,7 @@ class Atom:
         return isinstance(other, Atom) and other.name == self.name
 
     def __str__(self):
-        return "Atom(" + str(self.name) + ")"
+        return str(self.name)
 
 
 class Box:
@@ -167,7 +167,7 @@ class Implies:
 
     # TODO
     def __str__(self):
-        raise NotImplementedError
+        return "(" + self.left.__str__() + " -> " + self.right.__str__() + ")"
 
 
 class Not:
@@ -185,7 +185,7 @@ class Not:
         return self.inner == other.inner
 
     def __str__(self):
-        return "Not(" + str(self.inner) + ")"
+        return "not " + str(self.inner)
 
 
 class And:
@@ -204,7 +204,7 @@ class And:
         return self.left == other.left and self.right == other.right
 
     def __str__(self):
-        return "And(" + self.left.__str__() + ", " + self.right.__str__() + ")"
+        return "(" + self.left.__str__() + " and " + self.right.__str__() + ")"
 
 
 class Or:
@@ -225,4 +225,4 @@ class Or:
 
     # TODO
     def __str__(self):
-        raise NotImplementedError
+        return "(" + self.left.__str__() + " or " + self.right.__str__() + ")"
