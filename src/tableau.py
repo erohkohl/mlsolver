@@ -101,6 +101,10 @@ class Node:
             if isinstance(formula, Implies):
                 inner_node = create_node(START_WORLD, Not(formula.right), [])
                 return create_node(START_WORLD, formula.left, [inner_node])
+            if isinstance(formula, Box):
+                return create_node(START_WORLD, Diamond(Not(formula.inner)), [])
+            if isinstance(formula, Diamond):
+                return create_node(START_WORLD, Box(Not(formula.inner)), [])
             return create_node(START_WORLD, formula, [])
 
         if isinstance(self.formula, And):

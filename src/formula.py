@@ -41,13 +41,11 @@ class Box:
                 result = result and self.inner.semantic(ks, relation[1])
         return result
 
-    # TODO
     def __eq__(self, other):
-        raise NotImplementedError
+        return isinstance(other, Box) and self.inner == other.inner
 
-    # TODO
     def __str__(self):
-        raise NotImplementedError
+        return "Box(" + str(self.inner) + ")"
 
 
 class Box_a:
@@ -115,13 +113,11 @@ class Diamond:
                 result = result or self.inner.semantic(ks, relation[1])
         return result
 
-    # TODO
     def __eq__(self, other):
-        raise NotImplementedError
+        return isinstance(other, Diamond) and self.inner == other.inner
 
-    # TODO
     def __str__(self):
-        raise NotImplementedError
+        return "Diamond(" + str(self.inner) + ")"
 
 
 class Diamond_a:

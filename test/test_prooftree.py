@@ -236,3 +236,27 @@ def test_derive_p_and_q_or_not_p_check_part_assign():
     assert child_two_q.partial_assign['q'] is True
     assert child_two_not_p.partial_assign['p'] is True  # Branch contains bottom symbol
     assert isinstance(child_two_not_p.children, Bottom)
+
+
+def test_not_box_p():
+    f = Not(Box(Atom('p')))
+    tree = ProofTree(f)
+    tree.derive()
+
+    child_node = Node('s', Diamond(Not(Atom('p'))), [])
+    child_node.is_derived = True
+    root = Node('s', Not(Box(Atom('p'))), [child_node])
+    root.is_derived = True
+    assert root == tree.root_node
+
+
+def test_not_diamond_p():
+    f = Not(Diamond(Atom('p')))
+    tree = ProofTree(f)
+    tree.derive()
+
+    child_node = Node('s', Box(Not(Atom('p'))), [])
+    child_node.is_derived = True
+    root = Node('s', Not(Diamond(Atom('p'))), [child_node])
+    root.is_derived = True
+    assert root == tree.root_node
