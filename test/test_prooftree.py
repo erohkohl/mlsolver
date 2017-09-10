@@ -1,5 +1,6 @@
 from src.tableau import *
 from src.formula import *
+from src.kripke import *
 
 
 def test_derive_atom():
@@ -243,7 +244,8 @@ def test_not_box_p():
     tree = ProofTree(f)
     tree.derive()
 
-    child_node = Node('s', Diamond(Not(Atom('p'))), [])
+    leaf_p = Leaf('t', 'p', [], False)
+    child_node = Node('s', Diamond(Not(Atom('p'))), [leaf_p])
     child_node.is_derived = True
     root = Node('s', Not(Box(Atom('p'))), [child_node])
     root.is_derived = True
@@ -260,3 +262,18 @@ def test_not_diamond_p():
     root = Node('s', Not(Diamond(Atom('p'))), [child_node])
     root.is_derived = True
     assert root == tree.root_node
+
+
+def test_diamond_p():
+    f = Diamond(Atom('p'))
+    tree = ProofTree(f)
+    tree.derive()
+
+    leaf_p = Leaf('t', 'p', [], True)
+    expected_root = Node('s', Diamond(Atom('p')), [leaf_p])
+    expected_root.is_derived = True
+
+    assert expected_root == tree.root_node
+    assert ('s', 't') in tree.kripke_structure.relations
+    assert tree.kripke_structure.worlds[0] == World('s', {})
+    assert tree.kripke_structure.worlds[1] == World('t', {'p': True})

@@ -1,6 +1,7 @@
 """Kripke module
 
-Provides a tool to model Kripke structures and solve them in addition to a modal logic formula.
+Provides a tool to model Kripke structures and solve them in addition to a
+modal logic formula.
 """
 
 import copy
@@ -10,7 +11,8 @@ from itertools import chain, combinations
 
 class KripkeStructure:
     """
-    This class describes a Kripke Frame with it's possible worlds and their transition relation.
+    This class describes a Kripke Frame with it's possible worlds and their
+    transition relation.
     """
 
     def __init__(self, worlds, relations):
@@ -21,7 +23,8 @@ class KripkeStructure:
             raise TypeError
 
     def solve(self, formula):
-        """Returns a Kripke structure with minimum sub set of nodes, that each of it's nodes forces a given formula.
+        """Returns a Kripke structure with minimum sub set of nodes, that each
+        of it's nodes forces a given formula.
         """
         for i, subset in enumerate(self.get_power_set_of_worlds()):
             ks = KripkeStructure(self.worlds.copy(), copy.deepcopy(self.relations))
@@ -31,9 +34,10 @@ class KripkeStructure:
                 return ks
 
     def remove_node_by_name(self, node_name):
-        """Removes ONE node of Kripke frame, therefore we can make knowledge base consistent with announcement.
+        """Removes ONE node of Kripke frame, therefore we can make knowledge
+        base consistent with announcement.
         """
-        for world in self.worlds.copy():  # make copy, because change while iteration
+        for world in self.worlds.copy():
             if node_name == world.name:
                 self.worlds.remove(world)
 
@@ -49,18 +53,22 @@ class KripkeStructure:
                         value.remove((start_node, end_node))
 
     def get_power_set_of_worlds(self):
-        """Returns a list with all possible sub sets of world names, sorted by ascending number of their elements.
+        """Returns a list with all possible sub sets of world names, sorted
+        by ascending number of their elements.
         """
         sub_set = [{}]
         worlds_by_name = []
         for w in self.worlds:
             worlds_by_name.append(w.name)
-        for z in chain.from_iterable(combinations(worlds_by_name, r + 1) for r in range(len(worlds_by_name) + 1)):
+        for z in chain.from_iterable(
+                combinations(worlds_by_name, r + 1)
+                for r in range(len(worlds_by_name) + 1)):
             sub_set.append(set(z))
         return sub_set
 
     def nodes_not_follow_formula(self, formula):
-        """Returns a list with all worlds of Kripke structure, where formula is not satisfiable
+        """Returns a list with all worlds of Kripke structure, where formula
+         is not satisfiable
         """
         nodes_not_follow_formula = []
         for nodes in self.worlds:
@@ -71,7 +79,8 @@ class KripkeStructure:
     def __eq__(self, other):
         """Returns true iff two Kripke structures are equivalent
         """
-        if (self.worlds == [] and not other.worlds == []) or (not self.worlds == [] and other.worlds == []):
+        if (self.worlds == [] and not other.worlds == []) \
+                or (not self.worlds == [] and other.worlds == []):
             return False
         for (i, j) in zip(self.worlds, other.worlds):
             if not i.__eq__(j):
@@ -95,8 +104,8 @@ class KripkeStructure:
 
 class World:
     """
-    Represents the nodes of Kripke and it extends the graph to Kripke Structure by assigning a subset of propositional
-    variables to each world.
+    Represents the nodes of Kripke and it extends the graph to Kripke
+    Structure by assigning a subset of propositional variables to each world.
     """
 
     def __init__(self, name, assignment):

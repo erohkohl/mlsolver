@@ -6,18 +6,23 @@ tableau calculus.
 import copy
 
 from src.formula import *
-
-START_WORLD = 's'
+from src.kripke import *
 
 
 class ProofTree:
     """
-    Todo
+    The ProofTree determines one node instance as root of the tableau.
+    Moreover it holds a valid Kripke Structure, if the modal logic formula
+    is satisfiable. There the routine derive() manages the control flow,
+    that checks if the tree has not derived nodes, expand these nodes, adds
+    their children to the leafs and checks whether a path is closed.
     """
 
     def __init__(self, formula):
-        self.root_node = create_node(START_WORLD, formula, [])
-        self.kripke_structure = None
+        self.WORLDS = ['t', 's']
+        self.start_world = self.WORLDS.pop()
+        self.kripke_structure = KripkeStructure([World(self.start_world, {})], [])
+        self.root_node = self.create_node(self.start_world, formula, [])
         self.is_closed = None
 
     def derive(self):
@@ -28,10 +33,71 @@ class ProofTree:
         while next_node is not None:
             leafs = next_node.get_all_leafs()
             for leaf in leafs:
-                leaf.add_child(next_node.expand_node())
+                leaf.add_child(self.expand_node(next_node))
             next_node.is_derived = True
             next_node = self.root_node.__next__()
         check_conflict(self.root_node)
+
+    def create_node(self, world_name, formula, children):
+        """Routine decides whether a node must be a leaf node, when it is not
+        derivable further, or a classical node.
+        """
+        if isinstance(formula, Atom):
+            self.kripke_structure.worlds.append(World(world_name, {formula.name: True}))
+            return Leaf(world_name, formula.name, children, True)
+        elif isinstance(formula, Not) and isinstance(formula.inner, Atom):
+            self.kripke_structure.worlds.append(World(world_name, {formula.inner.name: True}))
+            return Leaf(world_name, formula.inner.name, children, False)
+        else:
+            return Node(world_name, formula, children)
+        return None
+
+    def expand_node(self, node):
+        """Contains all rules of tableau calculus and tries to match them to a node
+        """
+        if isinstance(node.formula, Atom):
+            return None
+
+        if isinstance(node.formula, Not):
+            formula = node.formula.inner
+            if isinstance(formula, Not):
+                return self.create_node(node.world, formula.inner, [])
+            if isinstance(formula, Or):
+                inner_node = self.create_node(node.world, Not(formula.right), [])
+                return self.create_node(node.world, Not(formula.left), [inner_node])
+            if isinstance(formula, And):
+                first_node = self.create_node(node.world, Not(formula.left), [])
+                second_node = self.create_node(node.world, Not(formula.right), [])
+                return [first_node, second_node]
+            if isinstance(formula, Implies):
+                inner_node = self.create_node(node.world, Not(formula.right), [])
+                return self.create_node(node.world, formula.left, [inner_node])
+            if isinstance(formula, Box):
+                return self.create_node(node.world, Diamond(Not(formula.inner)), [])
+            if isinstance(formula, Diamond):
+                return self.create_node(node.world, Box(Not(formula.inner)), [])
+            return self.create_node(node.world, formula, [])
+
+        if isinstance(node.formula, And):
+            inner_node = self.create_node(node.world, node.formula.right, [])
+            return self.create_node(node.world, node.formula.left, [inner_node])
+
+        if isinstance(node.formula, Or):
+            first_node = self.create_node(node.world, node.formula.left, [])
+            second_node = self.create_node(node.world, node.formula.right, [])
+            return [first_node, second_node]
+
+        if isinstance(node.formula, Implies):
+            first_node = self.create_node(node.world, Not(node.formula.left), [])
+            second_node = self.create_node(node.world, node.formula.right, [])
+            return [first_node, second_node]
+
+        if isinstance(node.formula, Diamond):
+            next_world = self.WORLDS.pop()
+            self.kripke_structure.relations.append((node.world, next_world))
+            return self.create_node(next_world, node.formula.inner, [])
+
+        return None
 
     def __str__(self):
         return str(self.root_node)
@@ -54,19 +120,6 @@ def check_conflict(node):
         check_conflict(child)
 
 
-def create_node(world_name, formula, children):
-    """Routine decides whether a node must be a leaf node, when it is not
-    derivable further, or a classical node.
-    """
-    if isinstance(formula, Atom):
-        return Leaf(world_name, formula.name, children, True)
-    elif isinstance(formula, Not) and isinstance(formula.inner, Atom):
-        return Leaf(world_name, formula.inner.name, children, False)
-    else:
-        return Node(world_name, formula, children)
-    return None
-
-
 class Node:
     """
     Class represents one node of the proof tree. Therefore it holds one
@@ -74,64 +127,26 @@ class Node:
     derived is true, when this node was processed by the solver.
     """
 
-    def __init__(self, world_name, formula, children):
-        self.world_name = world_name
+    def __init__(self, world, formula, children):
+        self.world = world
         self.children = children
         self.formula = formula
         self.is_derived = False
         self.partial_assign = dict()
+        self.parent = None
 
-    def expand_node(self):
-        """Contains all rules of tableau calculus and tries to match them to a node
-        """
-        if isinstance(self.formula, Atom):
-            return None
-
-        if isinstance(self.formula, Not):
-            formula = self.formula.inner
-            if isinstance(formula, Not):
-                return create_node(START_WORLD, formula.inner, [])
-            if isinstance(formula, Or):
-                inner_node = create_node(START_WORLD, Not(formula.right), [])
-                return create_node(START_WORLD, Not(formula.left), [inner_node])
-            if isinstance(formula, And):
-                first_node = create_node(START_WORLD, Not(formula.left), [])
-                second_node = create_node(START_WORLD, Not(formula.right), [])
-                return [first_node, second_node]
-            if isinstance(formula, Implies):
-                inner_node = create_node(START_WORLD, Not(formula.right), [])
-                return create_node(START_WORLD, formula.left, [inner_node])
-            if isinstance(formula, Box):
-                return create_node(START_WORLD, Diamond(Not(formula.inner)), [])
-            if isinstance(formula, Diamond):
-                return create_node(START_WORLD, Box(Not(formula.inner)), [])
-            return create_node(START_WORLD, formula, [])
-
-        if isinstance(self.formula, And):
-            inner_node = create_node(START_WORLD, self.formula.right, [])
-            return create_node(START_WORLD, self.formula.left, [inner_node])
-
-        if isinstance(self.formula, Or):
-            first_node = create_node(START_WORLD, self.formula.left, [])
-            second_node = create_node(START_WORLD, self.formula.right, [])
-            return [first_node, second_node]
-
-        if isinstance(self.formula, Implies):
-            first_node = create_node(START_WORLD, Not(self.formula.left), [])
-            second_node = create_node(START_WORLD, self.formula.right, [])
-            return [first_node, second_node]
-
-        return None
-
-    def add_child(self, node):
+    def add_child(self, nodes):
         """Routine adds one child node or list of children to the current
          instance.
         """
-        if isinstance(node, list):
-            for n in node:
-                self.children.append(n)
-        elif not node is None:
-            self.children.append(node)
+        if isinstance(nodes, list):
+            for node in nodes:
+                self.children.append(node)
+                node.parent = self
+        elif not nodes is None:
+            # Just one node to add, not list
+            self.children.append(nodes)
+            nodes.parent = self
 
     def get_all_leafs(self):
         """Returns list of nodes, which each node has no children.
@@ -177,7 +192,7 @@ class Node:
         for (self_child, other_child) in zip(self.children, other.children):
             are_children_eq = are_children_eq and self_child == other_child
 
-        return self.world_name == other.world_name \
+        return self.world == other.world \
                and self.is_derived == other.is_derived \
                and self.formula == other.formula \
                and are_children_eq
@@ -193,7 +208,7 @@ class Leaf(Node):
     variables or their negations.
     """
 
-    def __init__(self, world_name, variable_name, children, assign):
+    def __init__(self, world_name, variable_name, children, assign):  # Todo refactor order var and assignment
         super().__init__(world_name, None, children)
         self.variable_name = variable_name
         self.assign = assign
