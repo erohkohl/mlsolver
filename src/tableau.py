@@ -4,6 +4,7 @@ This module contains data structures to store the proof tree of modal logic's
 tableau calculus.
 """
 import copy
+from functools import reduce
 
 from src.formula import *
 
@@ -44,11 +45,11 @@ def check_conflict(node):
 
     if isinstance(node, Leaf):
         try:
-            if not node.partial_assign[node.variable_name] is node.assign:
+            if not node.partial_assign[node.formula] is node.assign:
                 node.children = Bottom()
                 return
         except:
-            node.partial_assign[node.variable_name] = node.assign
+            node.partial_assign[node.formula] = node.assign
     for child in node.children:
         child.partial_assign.update(copy.deepcopy(node.partial_assign))
         check_conflict(child)
@@ -179,7 +180,22 @@ class Node:
                and are_children_eq
 
     def __str__(self):
-        raise NotImplementedError
+        bind_string = ""
+        children_string = ""
+
+        if isinstance(self.formula, And):
+            # members are distributed over .children - get over two for
+            bind_string += "\n|\n"
+            for child in self.children:
+                for childchild in child.children:
+                    children_string = child.formula + "\n|\n" + childchild.formula
+        elif isinstance(self.formula, Or) or isinstance(self.formula, Implies):
+            # all member in self.children existing - reduce to one flat child-string
+            bind_string += "\n/ \ \n"
+            child_name_list = list(map(lambda c: c.formula, self.children))
+            children_string = reduce(lambda x, y: x + ";" + y, child_name_list)
+
+        return str(self.formula) + bind_string + children_string
 
 
 class Leaf(Node):
@@ -189,9 +205,9 @@ class Leaf(Node):
     variables or their negations.
     """
 
-    def __init__(self, world_name, variable_name, children, assign):
+    def __init__(self, world_name, formula, children, assign):
         super().__init__(world_name, None, children)
-        self.variable_name = variable_name
+        self.formula = formula
         self.assign = assign
         self.is_derived = True
 
@@ -200,10 +216,10 @@ class Leaf(Node):
                and self.is_derived \
                and other.is_derived \
                and self.assign == other.assign \
-               and self.variable_name == other.variable_name
+               and self.formula == other.formula
 
     def __str__(self):
-        raise NotImplementedError
+        return str(self.formula)
 
 
 class Bottom(Node):
@@ -224,4 +240,4 @@ class Bottom(Node):
             return False
 
     def __str__(self):
-        raise NotImplementedError
+        return "\n|\n__\n"
