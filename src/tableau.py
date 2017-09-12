@@ -184,11 +184,8 @@ class Node:
         children_string = ""
 
         if isinstance(self.formula, And):
-            # members are distributed over .children - get over two for
             bind_string += "\n|\n"
-            for child in self.children:
-                for childchild in child.children:
-                    children_string = child.formula + "\n|\n" + childchild.formula
+            children_string = self.depth_str_collect(children_string, bind_string)
         elif isinstance(self.formula, Or) or isinstance(self.formula, Implies):
             # all member in self.children existing - reduce to one flat child-string
             bind_string += "\n/ \ \n"
@@ -196,6 +193,19 @@ class Node:
             children_string = reduce(lambda x, y: x + ";" + y, child_name_list)
 
         return str(self.formula) + bind_string + children_string
+
+    def depth_str_collect(self, children_string, bind_string):
+        childs = self.children
+        childs_exist = childs != []
+        while childs_exist:
+            child = childs[0]
+            children_string = children_string + str(child.formula)
+            childs = child.children
+            childs_exist = childs != []
+            if childs_exist:
+                children_string += bind_string
+
+        return children_string
 
 
 class Leaf(Node):

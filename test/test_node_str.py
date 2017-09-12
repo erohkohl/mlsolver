@@ -44,6 +44,24 @@ def test_str_and():
     assert expected_str == str(tree)
 
 
+def test_str_and_and():
+    f = And(And(Atom('p'), Atom('q')), Atom('r'))
+    tree = ProofTree(f)
+    tree.derive()
+
+    expected_str = '((p and q) and r)\n|\n(p and q)\n|\nr\n|\np\n|\nq'
+    assert expected_str == str(tree)
+
+
+def test_str_and_and_and():
+    f = And(And(And(Atom('p'), Atom('q')), Atom('r')), Atom('s'))
+    tree = ProofTree(f)
+    tree.derive()
+    print(tree.root_node)
+    expected_str = '(((p and q) and r) and s)\n|\n((p and q) and r)\n|\ns\n|\n(p and q)\n|\nr\n|\np\n|\nq'
+    assert expected_str == str(tree)
+
+
 # fixme
 def test_str_or_and():
     f = And(Or(Atom('p'), Atom('q')), Atom('q'))
