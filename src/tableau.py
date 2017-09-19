@@ -52,6 +52,18 @@ class ProofTree:
             return Node(world_name, formula, children)
         return None
 
+    def resolve_box_operator(self, node, new_world):
+        """Walks through all parent nodes and check whether box operator
+        forces formula in new world
+        """
+        leafs = []
+        if node.parent is None:
+            return leafs
+        if isinstance(node.formula, Box):
+            leaf = self.create_node(new_world, node.formula.inner, [])
+            leafs.append(leaf)
+        return leafs + self.resolve_box_operator(node.parent, new_world)
+
     def expand_node(self, node):
         """Contains all rules of tableau calculus and tries to match them to a node
         """
@@ -80,7 +92,9 @@ class ProofTree:
 
         if isinstance(node.formula, And):
             inner_node = self.create_node(node.world, node.formula.right, [])
-            return self.create_node(node.world, node.formula.left, [inner_node])
+            outer_node = self.create_node(node.world, node.formula.left, [inner_node])
+            inner_node.parent = outer_node
+            return outer_node
 
         if isinstance(node.formula, Or):
             first_node = self.create_node(node.world, node.formula.left, [])
@@ -95,7 +109,8 @@ class ProofTree:
         if isinstance(node.formula, Diamond):
             next_world = self.WORLDS.pop()
             self.kripke_structure.relations.append((node.world, next_world))
-            return self.create_node(next_world, node.formula.inner, [])
+            leafs_forced_by_box = self.resolve_box_operator(node, next_world)
+            return self.create_node(next_world, node.formula.inner, leafs_forced_by_box)
 
         return None
 
@@ -198,7 +213,7 @@ class Node:
                and are_children_eq
 
     def __str__(self):
-        raise NotImplementedError
+        return self.world + ':' + str(self.formula) + str(self.is_derived)
 
 
 class Leaf(Node):
@@ -222,7 +237,7 @@ class Leaf(Node):
                and self.variable_name == other.variable_name
 
     def __str__(self):
-        raise NotImplementedError
+        return self.world + ':' + str(self.variable_name) + str(self.assign)
 
 
 class Bottom(Node):

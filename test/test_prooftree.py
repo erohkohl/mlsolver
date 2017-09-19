@@ -252,6 +252,16 @@ def test_not_box_p():
     assert root == tree.root_node
 
 
+def test_box_p():
+    f = Box(Atom('p'))
+    tree = ProofTree(f)
+    tree.derive()
+
+    root = Node('s', Box(Atom('p')), [])
+    root.is_derived = True
+    assert root == tree.root_node
+
+
 def test_not_diamond_p():
     f = Not(Diamond(Atom('p')))
     tree = ProofTree(f)
@@ -277,3 +287,20 @@ def test_diamond_p():
     assert ('s', 't') in tree.kripke_structure.relations
     assert tree.kripke_structure.worlds[0] == World('s', {})
     assert tree.kripke_structure.worlds[1] == World('t', {'p': True})
+
+
+def test_box_p_and_diamond_q():
+    f = And(Box(Atom('p')), Diamond(Atom('q')))
+    tree = ProofTree(f)
+    tree.derive()
+
+    leaf_p = Leaf('t', 'p', [], True)
+    leaf_q = Leaf('t', 'q', [leaf_p], True)
+    diamond_q = Node('s', Diamond(Atom('q')), [leaf_q])
+    diamond_q.is_derived = True
+    box_p = Node('s', Box(Atom('p')), [diamond_q])
+    box_p.is_derived = True
+    root = Node('s', And(Box(Atom('p')), Diamond(Atom('q'))), [box_p])
+    root.is_derived = True
+
+    assert root == tree.root_node
