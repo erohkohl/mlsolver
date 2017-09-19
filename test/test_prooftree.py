@@ -304,3 +304,26 @@ def test_box_p_and_diamond_q():
     root.is_derived = True
 
     assert root == tree.root_node
+
+
+def test_box_p_and_r_and_diamond_q():
+    f = And(Box(Atom('p')), And(Atom('r'), Diamond(Atom('q'))))
+    tree = ProofTree(f)
+    tree.derive()
+
+    leaf_p = Leaf('t', 'p', [], True)
+    leaf_q = Leaf('t', 'q', [leaf_p], True)
+
+    diamond_q = Node('s', Diamond(Atom('q')), [leaf_q])
+    diamond_q.is_derived = True
+    leaf_r = Leaf('s', 'r', [diamond_q], True)
+
+    r_and_diamond_q = Node('s', And(Atom('r'), Diamond(Atom('q'))), [leaf_r])
+    r_and_diamond_q.is_derived = True
+
+    box_p = Node('s', Box(Atom('p')), [r_and_diamond_q])
+    box_p.is_derived = True
+    root = Node('s', And(Box(Atom('p')), And(Atom('r'), Diamond(Atom('q')))), [box_p])
+    root.is_derived = True
+
+    assert root == tree.root_node
