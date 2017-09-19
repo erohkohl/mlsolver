@@ -147,6 +147,7 @@ class Node:
         self.is_derived = False
         self.partial_assign = dict()
         self.parent = None
+        self.level = 0
 
     def add_child(self, nodes):
         """Routine adds one child node or list of children to the current
@@ -188,7 +189,7 @@ class Node:
             for child in self.children:
                 if not child.is_derived:
                     return child
-                else:
+                if child.__next__() is not None:
                     return child.__next__()
         return None
 
@@ -211,7 +212,17 @@ class Node:
                and are_children_eq
 
     def __str__(self):
-        return self.world + ':' + str(self.formula) + str(self.is_derived)
+        if self.level == 0:
+            tree_str = "\t" * self.level + repr(self) + "\n"
+        else:
+            tree_str = "\t" * self.level + "|_ " + repr(self) + "\n"
+        for child in self.children:
+            child.level = self.level + 1
+            tree_str += child.__str__()
+        return tree_str
+
+    def __repr__(self):
+        return self.world + ':' + str(self.formula)
 
 
 class Leaf(Node):
@@ -221,7 +232,7 @@ class Leaf(Node):
     variables or their negations.
     """
 
-    def __init__(self, world_name, variable_name, children, assign):  # Todo refactor order var and assignment
+    def __init__(self, world_name, variable_name, children, assign):
         super().__init__(world_name, None, children)
         self.variable_name = variable_name
         self.assign = assign
@@ -235,7 +246,13 @@ class Leaf(Node):
                and self.variable_name == other.variable_name
 
     def __str__(self):
-        return self.world + ':' + str(self.variable_name) + str(self.assign)
+        return super(Leaf, self).__str__()
+
+    def __repr__(self):
+        if self.assign:
+            return self.world + ':' + str(self.variable_name)
+        else:
+            return self.world + ': not' + str(self.variable_name)
 
 
 class Bottom(Node):
