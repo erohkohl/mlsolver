@@ -134,7 +134,8 @@ class ProofTree:
         return None
 
     def __str__(self):
-        return str(self.root_node)
+        return "Prooftree\n=========\n" + str(self.root_node) + \
+               '\n' + "Kripke Structure\n================\n" + str(self.kripke_structure)
 
 
 def check_conflict(node):
@@ -246,17 +247,17 @@ class Node:
                 end_str = repr(self.children) + "\n"
             else:
                 end_str = "\n"
-            relations_str = ""
+            rel_str = ""
             try:
+                # Adds tuple with world names, if path contains diamond
                 if not self.world == self.parent.world:
-                    relations_str = "\t" * (self.level - 1) +\
-                                    '  (' + self.parent.world + ', ' + \
-                                    self.world + ')' + \
-                                    "\n" + "\t" * self.level + "| \n"
+                    rel_str = "\t" * (self.level - 1) \
+                              + '  (' + self.parent.world + ', ' + self.world + ')' \
+                              + "\n" + "\t" * self.level + "| \n"
             except:
                 pass
             tree_str = "\t" * self.level + "| \n" + \
-                       relations_str + \
+                       rel_str + \
                        "\t" * self.level + "|_ " + repr(self) + end_str
 
         if not isinstance(self.children, Bottom):

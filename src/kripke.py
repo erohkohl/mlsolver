@@ -101,6 +101,12 @@ class KripkeStructure:
                         return False
         return True
 
+    def __str__(self):
+        worlds_str = "(W = {"
+        for world in self.worlds:
+            worlds_str += str(world)
+        return worlds_str + '}, R = ' + str(self.relations) + ')'
+
 
 class World:
     """
@@ -114,3 +120,6 @@ class World:
 
     def __eq__(self, other):
         return self.name == other.name and self.assignment == other.assignment
+
+    def __str__(self):
+        return "(" + self.name + ',' + str(self.assignment) + ')'
