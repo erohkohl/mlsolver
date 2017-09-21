@@ -243,10 +243,20 @@ class Node:
             tree_str = "\t" * self.level + repr(self) + "\n "
         else:
             if isinstance(self.children, Bottom):
-                end_str = repr(self.children)
+                end_str = repr(self.children) + "\n"
             else:
                 end_str = "\n"
+            relations_str = ""
+            try:
+                if not self.world == self.parent.world:
+                    relations_str = "\t" * (self.level - 1) +\
+                                    '  (' + self.parent.world + ', ' + \
+                                    self.world + ')' + \
+                                    "\n" + "\t" * self.level + "| \n"
+            except:
+                pass
             tree_str = "\t" * self.level + "| \n" + \
+                       relations_str + \
                        "\t" * self.level + "|_ " + repr(self) + end_str
 
         if not isinstance(self.children, Bottom):
