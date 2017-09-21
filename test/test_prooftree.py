@@ -180,7 +180,7 @@ def test_derive_not_p_and_q():
     assert tree_expected == tree.root_node
 
 
-def test_derive_multiple_leafs():
+def test_derive_p_or_q_and_not_p_implies_q_correct_tree():
     f = And(Or(Atom('p'), Atom('q'))
             , Not(Implies(Atom('p'), Atom('q'))))
     tree = ProofTree(f)
@@ -203,10 +203,16 @@ def test_derive_multiple_leafs():
     node_root.is_derived = True
 
     assert node_root == tree.root_node
-    assert tree.root_node.children[0].children[0] \
-               .children[0].children[0].children[0].partial_assign['q'] is False
-    assert tree.root_node.children[0].children[0] \
-               .children[0].children[0].children[0].partial_assign['p'] is True
+
+
+def test_derive_p_or_q_and_not_p_implies_q_correct_ks():
+    f = And(Or(Atom('p'), Atom('q'))
+            , Not(Implies(Atom('p'), Atom('q'))))
+    tree = ProofTree(f)
+    tree.derive()
+
+    expected_ks = KripkeStructure([World('s', {'p': True, 'q': False})], set())
+    assert expected_ks == tree.kripke_structure
 
 
 def test_derive_p_or_not_p_check_part_assign():
@@ -217,8 +223,8 @@ def test_derive_p_or_not_p_check_part_assign():
     child_one = tree.root_node.children[0]
     child_two = tree.root_node.children[1]
 
-    assert child_one.partial_assign['p'] is True
-    assert child_two.partial_assign['p'] is False
+    assert child_one.partial_assign['s'] == {'p': True}
+    assert child_two.partial_assign['s'] == {'p': False}
 
 
 def test_derive_p_and_q_or_not_p_check_part_assign():
@@ -231,11 +237,10 @@ def test_derive_p_and_q_or_not_p_check_part_assign():
     child_two_q = child_two.children[0]
     child_two_not_p = child_two.children[1]
 
-    assert child_one.partial_assign['p'] is True
-    assert child_two.partial_assign['p'] is True
-    assert child_two_q.partial_assign['p'] is True
-    assert child_two_q.partial_assign['q'] is True
-    assert child_two_not_p.partial_assign['p'] is True  # Branch contains bottom symbol
+    assert child_one.partial_assign['s'] == {'p': True}
+    assert child_two.partial_assign['s'] == {'p': True}
+    assert child_two_q.partial_assign['s'] == {'p': True, 'q': True}
+    assert child_two_not_p.partial_assign['s'] == {'p': True}  # Branch contains bottom symbol
     assert isinstance(child_two_not_p.children, Bottom)
 
 
@@ -274,7 +279,7 @@ def test_not_diamond_p():
     assert root == tree.root_node
 
 
-def test_diamond_p():
+def test_diamond_p_correct_tree():
     f = Diamond(Atom('p'))
     tree = ProofTree(f)
     tree.derive()
@@ -284,9 +289,16 @@ def test_diamond_p():
     expected_root.is_derived = True
 
     assert expected_root == tree.root_node
-    assert ('s', 't') in tree.kripke_structure.relations
-    assert tree.kripke_structure.worlds[0] == World('s', {})
-    assert tree.kripke_structure.worlds[1] == World('t', {'p': True})
+
+
+def test_diamond_p_correct_ks():
+    f = Diamond(Atom('p'))
+    tree = ProofTree(f)
+    tree.derive()
+
+    worlds = [World('s', {}), World('t', {'p': True}), ]
+    expected_ks = KripkeStructure(worlds, {('s', 't')})
+    assert expected_ks == tree.kripke_structure
 
 
 def test_box_p_and_diamond_q():
@@ -306,7 +318,7 @@ def test_box_p_and_diamond_q():
     assert root == tree.root_node
 
 
-def test_box_p_and_r_and_diamond_q():
+def test_box_p_and_r_and_diamond_q_correct_tree():
     f = And(Box(Atom('p')), And(Atom('r'), Diamond(Atom('q'))))
     tree = ProofTree(f)
     tree.derive()
@@ -329,7 +341,27 @@ def test_box_p_and_r_and_diamond_q():
     assert root == tree.root_node
 
 
-def test_box_p_or_r_and_diamond_q():
+def test_box_p_and_r_and_diamond_q_correct_relations():
+    f = And(Box(Atom('p')), And(Atom('r'), Diamond(Atom('q'))))
+    tree = ProofTree(f)
+    tree.derive()
+
+    test_node = tree.root_node.children[0].children[0].children[0].children[0].children[0]
+    assert test_node.relations == {('s', 't')}
+    assert test_node.children[0].relations == {('s', 't')}
+
+
+def test_box_p_and_r_and_diamond_q_correct_ks():
+    f = And(Box(Atom('p')), And(Atom('r'), Diamond(Atom('q'))))
+    tree = ProofTree(f)
+    tree.derive()
+
+    worlds = [World('s', {'r': True}), World('t', {'p': True, 'q': True, })]
+    expected_ks = KripkeStructure(worlds, {('s', 't')})
+    assert expected_ks == tree.kripke_structure
+
+
+def test_box_p_or_r_and_diamond_q_correct_tree():
     f = Or(Box(Atom('p')), And(Atom('r'), Diamond(Atom('q'))))
     tree = ProofTree(f)
     tree.derive()
@@ -349,3 +381,12 @@ def test_box_p_or_r_and_diamond_q():
     root.is_derived = True
 
     assert root == tree.root_node
+
+
+def test_box_p_or_r_and_diamond_q_correct_relations():
+    f = Or(Box(Atom('p')), And(Atom('r'), Diamond(Atom('q'))))
+    tree = ProofTree(f)
+    tree.derive()
+
+    assert tree.root_node.children[0].relations == set()
+    assert tree.root_node.children[1].children[0].children[0].children[0].relations == {('s', 't')}

@@ -20,6 +20,6 @@ def test_p_and_not_p_correct_assign():
     tree = ProofTree(f)
     tree.derive()
 
-    expected_assign = {'p': True}
+    expected_assign = {'s': {'p': True}}
 
     assert expected_assign == tree.root_node.children[0].partial_assign

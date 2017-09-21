@@ -19,8 +19,9 @@ class ProofTree:
     def __init__(self, formula):
         self.WORLDS = ['t', 's']
         self.start_world = self.WORLDS.pop()
-        self.kripke_structure = KripkeStructure([World(self.start_world, {})], [])
         self.root_node = self.create_node(self.start_world, formula, [])
+        self.root_node.partial_assign = {self.start_world: {}}
+        self.kripke_structure = None
         self.is_closed = None
 
     def derive(self):
@@ -36,15 +37,33 @@ class ProofTree:
             next_node = self.root_node.__next__()
         check_conflict(self.root_node)
 
+        """
+        Find leaf, that has no children and return its partial assignment
+        and relations as ks. solutions_leaf stores all leafs of fully derived
+        proof tree, to check whether formula is satisfiable.
+        """
+        solutions_leafs = self.root_node.get_all_leafs()
+        if solutions_leafs == []:
+            pass  # Todo
+        else:
+            for leaf in solutions_leafs:
+                if not isinstance(leaf, Bottom):
+                    worlds = []
+                    for world_name, assign in leaf.partial_assign.items():
+                        world = World(world_name, assign)
+                        worlds.append(world)
+
+                    self.kripke_structure = KripkeStructure(worlds, leaf.relations)
+                    return
+            self.is_closed = True
+
     def create_node(self, world_name, formula, children):
         """Routine decides whether a node must be a leaf node, when it is not
         derivable further, or a classical node.
         """
         if isinstance(formula, Atom):
-            self.kripke_structure.worlds.append(World(world_name, {formula.name: True}))
             return Leaf(world_name, formula.name, children, True)
         elif isinstance(formula, Not) and isinstance(formula.inner, Atom):
-            self.kripke_structure.worlds.append(World(world_name, {formula.inner.name: True}))
             return Leaf(world_name, formula.inner.name, children, False)
         else:
             return Node(world_name, formula, children)
@@ -59,6 +78,7 @@ class ProofTree:
             return leafs
         if isinstance(node.formula, Box):
             leaf = self.create_node(new_world, node.formula.inner, [])
+            leaf.relations.add((node.world, new_world))
             leafs.append(leaf)
         return leafs + self.resolve_box_operator(node.parent, new_world)
 
@@ -106,9 +126,10 @@ class ProofTree:
 
         if isinstance(node.formula, Diamond):
             next_world = self.WORLDS.pop()
-            self.kripke_structure.relations.append((node.world, next_world))
             leafs_forced_by_box = self.resolve_box_operator(node, next_world)
-            return self.create_node(next_world, node.formula.inner, leafs_forced_by_box)
+            node_to_add = self.create_node(next_world, node.formula.inner, leafs_forced_by_box)
+            node_to_add.relations.add((node.world, next_world))
+            return node_to_add
 
         return None
 
@@ -123,11 +144,14 @@ def check_conflict(node):
 
     if isinstance(node, Leaf):
         try:
-            if not node.partial_assign[node.variable_name] is node.assign:
+            if not node.partial_assign[node.world][node.variable_name] is node.assign:
                 node.children = Bottom()
                 return
         except:
-            node.partial_assign[node.variable_name] = node.assign
+            try:
+                node.partial_assign[node.world].update({node.variable_name: node.assign})
+            except:
+                node.partial_assign[node.world] = {node.variable_name: node.assign}
     for child in node.children:
         child.partial_assign.update(copy.deepcopy(node.partial_assign))
         check_conflict(child)
@@ -146,6 +170,7 @@ class Node:
         self.formula = formula
         self.is_derived = False
         self.partial_assign = dict()
+        self.relations = set()
         self.parent = None
         self.level = 0
 
@@ -157,10 +182,12 @@ class Node:
             for node in nodes:
                 self.children.append(node)
                 node.parent = self
+                node.relations.update(self.relations)
         elif not nodes is None:
             # Just one node to add, not list
             self.children.append(nodes)
             nodes.parent = self
+            nodes.relations.update(self.relations)
 
     def get_all_leafs(self):
         """Returns list of nodes, which each node has no children.
@@ -169,7 +196,7 @@ class Node:
 
         if self.children == []:
             leafs.append(self)
-        else:
+        elif not isinstance(self.children, Bottom):
             for child in self.children:
                 for child_leafs in child.get_all_leafs():
                     leafs.append(child_leafs)
