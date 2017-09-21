@@ -176,7 +176,7 @@ class Node:
 
     def add_child(self, nodes):
         """Routine adds one child node or list of children to the current
-         instance.
+        instance.
         """
         if isinstance(nodes, list):
             for node in nodes:
@@ -240,12 +240,19 @@ class Node:
 
     def __str__(self):
         if self.level == 0:
-            tree_str = "\t" * self.level + repr(self) + "\n"
+            tree_str = "\t" * self.level + repr(self) + "\n "
         else:
-            tree_str = "\t" * self.level + "|_ " + repr(self) + "\n"
-        for child in self.children:
-            child.level = self.level + 1
-            tree_str += child.__str__()
+            if isinstance(self.children, Bottom):
+                end_str = repr(self.children)
+            else:
+                end_str = "\n"
+            tree_str = "\t" * self.level + "| \n" + \
+                       "\t" * self.level + "|_ " + repr(self) + end_str
+
+        if not isinstance(self.children, Bottom):
+            for child in self.children:
+                child.level = self.level + 1
+                tree_str += child.__str__()
         return tree_str
 
     def __repr__(self):
@@ -289,6 +296,7 @@ class Bottom(Node):
     """
 
     def __init__(self):
+        super().__init__(None, None, None)
         self.is_derived = True
         self.children = None
 
@@ -299,5 +307,11 @@ class Bottom(Node):
         except:
             return False
 
+    def __iter__(self):
+        return self
+
     def __str__(self):
-        raise NotImplementedError
+        return "\t" * self.level + repr(self) + "\n"
+
+    def __repr__(self):
+        return ' -|'
