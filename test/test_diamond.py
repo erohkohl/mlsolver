@@ -1,5 +1,5 @@
-from src.formula import Atom, Diamond
-from src.kripke import KripkeStructure, World
+from mlsolver.formula import Atom, Diamond
+from mlsolver.kripke import KripkeStructure, World
 
 
 def test_semantic_diamond_p_one_world_true():

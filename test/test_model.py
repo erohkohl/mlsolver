@@ -1,7 +1,7 @@
-from src.kripke import World, KripkeStructure
-from src.model import WiseMenWithHat
-import src.model as Model
-from src.formula import Atom, Box, Or, Box_a, And
+from mlsolver.kripke import World, KripkeStructure
+from mlsolver.model import WiseMenWithHat
+import mlsolver.model as Model
+from mlsolver.formula import Atom, Box, Or, Box_a, And
 
 
 def test_add_symmetric_edges():

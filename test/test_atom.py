@@ -1,5 +1,5 @@
-from src.formula import Atom
-from src.kripke import KripkeStructure, World
+from mlsolver.formula import Atom
+from mlsolver.kripke import KripkeStructure, World
 
 
 def test_atom_init():

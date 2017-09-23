@@ -1,5 +1,5 @@
-from src.tableau import *
-from src.formula import *
+from mlsolver.tableau import *
+from mlsolver.formula import *
 
 
 def test_derive_p_or_q_and_not_p_implies_q():

@@ -14,7 +14,7 @@ assigns to each node a subset of propositional variables. In Kripke's semantic a
 The following code snipped shows, how you can build the above Kripke structure with this framework. The Python syntax allows to model the transition relation of a Kripke frame very similar to its mathematical description. To model a valid Kripke frame, you have to ensure, that each node name of the transition relation appears in the list of worlds.
 
 ```python
-from src.kripke import World, KripkeStructure
+from mlsolver.kripke import World, KripkeStructure
 
 worlds = [
   World('1', {'p': True, 'q': True}),
@@ -33,7 +33,7 @@ Further more this framework allows you to check wether a node of your Kripke str
 <img src="./doc/formula_example.png" width="250">
 
 ```python
-from src.formula import *
+from mlsolver.formula import *
 
 formula = Implies(
   Diamond(Atom('p')),
@@ -48,6 +48,9 @@ assert True == formula.semantic(ks, '1')
 
 #### Solve modal logic formula with tableau calculus
 ```python
+from mlsolver.tableau import *
+from mlsolver.formula import *
+
 formula = Or(
     And(Box(Atom('p')), Atom('r'))
     , And(Atom('r'), Diamond(Atom('q')))

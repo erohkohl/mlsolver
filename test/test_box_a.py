@@ -1,5 +1,5 @@
-from src.formula import Atom, Box_a
-from src.kripke import KripkeStructure, World
+from mlsolver.formula import Atom, Box_a
+from mlsolver.kripke import KripkeStructure, World
 
 
 def test_semantic_box_a_true():

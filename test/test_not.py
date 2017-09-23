@@ -1,6 +1,6 @@
-from src.formula import Atom, Not
-from src.kripke import KripkeStructure, World
-from src.tableau import Node
+from mlsolver.formula import Atom, Not
+from mlsolver.kripke import KripkeStructure, World
+from mlsolver.tableau import Node
 
 
 def test_semantic_not_q():

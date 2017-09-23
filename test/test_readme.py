@@ -1,5 +1,5 @@
-from src.kripke import KripkeStructure, World
-from src.formula import *
+from mlsolver.kripke import KripkeStructure, World
+from mlsolver.formula import *
 
 
 def test_example_for_readme():

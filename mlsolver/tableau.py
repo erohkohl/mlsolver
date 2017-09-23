@@ -3,8 +3,8 @@
 This module contains data structures to store the proof tree of modal logic's
 tableau calculus.
 """
-from src.formula import *
-from src.kripke import *
+from mlsolver.formula import *
+from mlsolver.kripke import *
 
 
 class ProofTree:

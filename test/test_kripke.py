@@ -1,7 +1,7 @@
 import pytest
 
-from src.kripke import KripkeStructure, World
-from src.formula import And, Atom
+from mlsolver.kripke import KripkeStructure, World
+from mlsolver.formula import And, Atom
 
 
 def test_kripke_structure_init():

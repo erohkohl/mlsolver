@@ -1,5 +1,5 @@
-from src.tableau import Node, Leaf
-from src.formula import Atom, Not, And
+from mlsolver.tableau import Node, Leaf
+from mlsolver.formula import Atom, Not, And
 
 
 def test_node_is_eq_trivial_case():

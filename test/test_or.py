@@ -1,5 +1,5 @@
-from src.formula import Atom, Or
-from src.kripke import KripkeStructure, World
+from mlsolver.formula import Atom, Or
+from mlsolver.kripke import KripkeStructure, World
 
 
 def test_semantic_p_or_q():

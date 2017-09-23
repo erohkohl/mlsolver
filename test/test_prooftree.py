@@ -1,6 +1,6 @@
-from src.tableau import *
-from src.formula import *
-from src.kripke import *
+from mlsolver.tableau import *
+from mlsolver.formula import *
+from mlsolver.kripke import *
 
 
 def test_derive_atom():

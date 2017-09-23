@@ -1,5 +1,5 @@
-from src.formula import Box_star, Atom
-from src.kripke import KripkeStructure, World
+from mlsolver.formula import Box_star, Atom
+from mlsolver.kripke import KripkeStructure, World
 
 
 def test_box_star_empty_relations():
