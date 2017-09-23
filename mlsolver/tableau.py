@@ -300,7 +300,7 @@ class Leaf(Node):
         if self.assign:
             return self.world + ':' + str(self.variable_name)
         else:
-            return self.world + ': not' + str(self.variable_name)
+            return self.world + ': not ' + str(self.variable_name)
 
 
 class Bottom(Node):

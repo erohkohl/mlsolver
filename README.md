@@ -25,7 +25,7 @@ worlds = [
 relations = {('1', '2'), ('2', '1'), ('1', '3'), ('3', '3')}
 ks = KripkeStructure(worlds, relations)
 ```
-I decided to model the set of propositional variables as dict, therefore it is not necessary to explicit assign false to a variable.  Moreover World('2', {'p': False}) and World('2', {}) are equivalent.
+I decided to model the set of propositional variables as dict, therefore it is not necessary to explicit assign false to a variable.  Moreover ```World('2', {'p': False})``` and ```World('2', {})``` are equivalent.
 
 #### Describe modal logic formula and check its semantic over one world
 Further more this framework allows you to check wether a node of your Kripke structure forces a given modal logic formula. Therefore you can map a formula with this framework as following code snipped shows. To calculate the semantic of a modal logic formula over one world just call *semantic()*, pass in the Kripke structure and the name of the world, you want to check.
@@ -49,13 +49,13 @@ assert formula.semantic(ks, '1') is True
 #### Solve modal logic formula with tableau calculus
 A common challenge in artificial intelligence is, to determine a valid Kripke
 structure to a given modal logic formula. Therefore the modal logic tableau
-calculus gives us a tool, that constructes a Kripke structures starting from
+calculus gives us a tool, that constructes a Kripke structure starting from
 one world. If the formula is satisfiable, it is true in this world. Imagine we
-are searching for a valid Kripke structures, that satisfies the below formula
+are searching for a valid Kripke structure, that satisfies the below formula
 in the world *s*. The only thing to do, is to build this formula, like we already
 saw in the snippet above, pass it to an instance of ProofTree and call the *derive()*
-method. To check, whether the resolved Kripke structure is realy satisfies the formula
-in world s, you can again make use of the semantic() function.
+method. To check, whether the resolved Kripke structure really satisfies the formula
+in world s, you can again make use of Formula's semantic() function.
 
 <img src="./doc/tableau_example.png" width="265">
 
@@ -80,28 +80,53 @@ assert formula.semantic(pt.kripke_structure, 's') is True
 Proof tree
 ==========
 s:((Box(p) and r) or (r and Diamond(q)))
- 	|
-	|_ s:(Box(p) and r)
-		|
-		|_ s:Box(p)
-			|
-			|_ s:r
-	|
-	|_ s:(r and Diamond(q))
-		|
-		|_ s:r
-			|
-			|_ s:Diamond(q)
-				|
-			     (s, t)
-				|
-				|_ t:q
+    |
+    |_ s:(Box(p) and r)
+        |
+        |_ s:Box(p)
+            |
+            |_ s:r
+    |
+    |_ s:(r and Diamond(q))
+        |
+        |_ s:r
+            |
+            |_ s:Diamond(q)
+                |
+              (s, t)
+                |
+                |_ t:q
 
 Kripke structure
 ================
 (W = {(s,{'r': True})}, R = set())
 ```
 
+The output shows, that the tableau calculus determines two possible Kripke
+structures, because all paths are not closed. The second satisfiable Kripke
+structure would be ```(W = {(s,{'r': True}), (t,{'q': True})}, R = set(('s', 't')))```.
+One path is closed, if there is a conflict in one worlds partial assignment. The bottom
+symbol ```-|``` at the end of a leaf indicates a closed path (see snippet below).
+
+```bash
+s:((p or q) and not (p -> q))
+    |
+    |_ s:(p or q)
+    |
+    |_ s:not (p -> q)
+        |
+        |_ s:p
+            |
+            |_ s:p
+                |
+                |_ s: not q
+        |
+        |_ s:q
+            |
+            |_ s:p
+                |
+                |_ s: not q -| # this path is closed
+```
 
 
 #### Modelchecking
