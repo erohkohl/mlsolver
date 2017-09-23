@@ -1,5 +1,5 @@
-from src.formula import Atom, Box, Implies
-from src.kripke import KripkeStructure, World
+from mlsolver.formula import Atom, Box, Implies
+from mlsolver.kripke import KripkeStructure, World
 
 
 def test_semantic_box_p_implies_p():
@@ -11,5 +11,4 @@ def test_semantic_box_p_implies_p():
     relations = {('1', '2'), ('1', '3')}
     ks = KripkeStructure(worlds, relations)
     mpl = Implies(Box(Atom('p')), Atom('p'))
-
     assert False == mpl.semantic(ks, '1')
