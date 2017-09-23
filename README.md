@@ -1,6 +1,6 @@
 Modal logic solver
 ================================================================
-### Framework for modelling Kripke Structure and solving modal logic formulas [![Build Status](https://travis-ci.org/erohkohl/ai-modal-logic.svg?branch=master)](https://travis-ci.org/erohkohl/ai-modal-logic) [![codecov](https://codecov.io/gh/erohkohl/ai-modal-logic/branch/master/graph/badge.svg)](https://codecov.io/gh/erohkohl/ai-modal-logic)
+### Framework for modelling Kripke structures and solving modal logic formulas [![Build Status](https://travis-ci.org/erohkohl/ai-modal-logic.svg?branch=master)](https://travis-ci.org/erohkohl/ai-modal-logic) [![codecov](https://codecov.io/gh/erohkohl/ai-modal-logic/branch/master/graph/badge.svg)](https://codecov.io/gh/erohkohl/ai-modal-logic)
 
 This framework provides a tool for modelling Kripke structures, modal and multi modal
 logic formulas in **Python 3**. The aim of this framework is to describe the knowledge base of a multi agent system and its model, after one agent made an announcement. This knowledge base is mapped by a Kripke structure and one agents announcement is wrapped in a multi modal logic formula.
@@ -72,6 +72,7 @@ pt.derive()
 print(pt)
 assert formula.semantic(pt.kripke_structure, 's') is True
 ```
+
 **Output:**
 ```bash
 Proof tree
