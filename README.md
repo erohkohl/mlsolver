@@ -137,10 +137,10 @@ model = ks.solve(formula)
 ```
 
 #### Modelling multi agent systems
-Further this framework extends the classical modal logic by the semantics of Box_a and Diamond_a operators for describing multi agent systems. You can find their implementation in the Pyhton file [src.fromula](https://github.com/erohkohl/ai-modal-logic/blob/master/src/formula.py). To use this operators it is necessary to build a Kripke structure with additional transition relations for each agent. To illustrate the usage of the framework's multi modal logic implementation, I implemented the *three wise men puzzle*.
+Further this framework extends the classical modal logic by the semantics of Box_a and Diamond_a operators for describing multi agent systems. You can find their implementation in the Pyhton file [mlsolver.formula](https://github.com/erohkohl/mlsolver/blob/master/src/formula.py). To use this operators it is necessary to build a Kripke structure with additional transition relations for each agent. To illustrate the usage of the framework's multi modal logic implementation, I implemented the *three wise men puzzle*.
 
 ##### Example: Three wise men with hat
-The data model of this example is located in [src.model](https://github.com/erohkohl/ai-modal-logic/blob/master/src/model.py) and the Pyhton file [test_model.py](https://github.com/erohkohl/ai-modal-logic/blob/master/test/test_model.py) proves its results.
+The data model of this example is located in [mlsolver.model](https://github.com/erohkohl/mlsolver/blob/master/src/model.py) and the Pyhton file [test_model.py](https://github.com/erohkohl/mlsolver/blob/master/test/test_model.py) proves its results.
 
 This puzzle is about three wise men, all of them wear either a red or a white hat. All in all there are two white and three red hats. Each wise men is only able to see the hats of his two neighbors and has to guess the color of his own hat. You can see the Kripke structure, that describes this knowledge base, in the picture below. For example the world name *RWW* denotes, that in this scenario the first wise man wears a red hat, the second and third wise man a white hat. The transition relation is defined by equivalence of two worlds for one agent. For example World *RWW* and *RRW* are equivalent for agent 2, because he can't distinguish these two possible scenarios.
 
