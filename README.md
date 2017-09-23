@@ -30,7 +30,7 @@ I decided to model the set of propositional variables as dict, therefore it is n
 #### Describe modal logic formula and check its semantic over one world
 Further more this framework allows you to check wether a node of your Kripke structure forces a given modal logic formula. Therefore you can map a formula with this framework as following code snipped shows. To calculate the semantic of a modal logic formula over one world just call *semantic()*, pass in the Kripke structure and the name of the world, you want to check.
 
-<img src="./doc/formula_example.png" width="250">
+<img src="./doc/formula_example.png" width="265">
 
 ```python
 from mlsolver.formula import *
@@ -43,13 +43,24 @@ formula = Implies(
   )
 )
 
-assert True == formula.semantic(ks, '1')
+assert formula.semantic(ks, '1') is True
 ```
 
 #### Solve modal logic formula with tableau calculus
+A common challenge in artificial intelligence is, to determine a valid Kripke
+structure to a given modal logic formula. Therefore the modal logic tableau
+calculus gives us a tool, that constructes a Kripke structures starting from
+one world. If the formula is satisfiable, it is true in this world. Imagine we
+are searching for a valid Kripke structures, that satisfies the below formula
+in the world *s*. The only thing to do, is to build this formula, like we already
+saw in the snippet above, pass it to an instance of ProofTree and call the *derive()*
+method. To check, whether the resolved Kripke structure is realy satisfies the formula
+in world s, you can again make use of the semantic() function.
+
+<img src="./doc/tableau_example.png" width="265">
 ```python
 from mlsolver.tableau import *
-from mlsolver.formula import *
+from mlsolver.formula import ProofTree
 
 formula = Or(
     And(Box(Atom('p')), Atom('r'))
@@ -59,31 +70,31 @@ pt = ProofTree(formula)
 pt.derive()
 
 print(pt)
+assert formula.semantic(pt.kripke_structure, 's') is True
 ```
-
-
+**Output:**
 ```bash
-Prooftree
-=========
+Proof tree
+==========
 s:((Box(p) and r) or (r and Diamond(q)))
- 	| 
+ 	|
 	|_ s:(Box(p) and r)
-		| 
+		|
 		|_ s:Box(p)
-			| 
+			|
 			|_ s:r
-	| 
+	|
 	|_ s:(r and Diamond(q))
-		| 
+		|
 		|_ s:r
-			| 
+			|
 			|_ s:Diamond(q)
-				| 
+				|
 			     (s, t)
-				| 
+				|
 				|_ t:q
 
-Kripke Structure
+Kripke structure
 ================
 (W = {(s,{'r': True})}, R = set())
 ```

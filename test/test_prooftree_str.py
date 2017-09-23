@@ -19,13 +19,3 @@ def test_box_p_and_r_or_r_and_diamond_q():
 
     print()
     print(tree)
-
-
-def test_demo():
-    f = Or(And(Or(Atom('p'), Atom('q'))
-               , Not(Implies(Atom('p'), Atom('q')))), And(Atom('r'), Diamond(Atom('q'))))
-    tree = ProofTree(f)
-    tree.derive()
-
-    print()
-    print(tree)

@@ -1,8 +1,9 @@
-from mlsolver.kripke import KripkeStructure, World
+from mlsolver.kripke import *
 from mlsolver.formula import *
+from mlsolver.tableau import ProofTree
 
 
-def test_example_for_readme():
+def test_check_semantic_formula():
     worlds = [
         World('1', {'p': True, 'q': True}),
         World('2', {'p': True}),
@@ -19,4 +20,15 @@ def test_example_for_readme():
             Diamond(Atom('q'))
         )
     )
-    assert True == formula.semantic(ks, '1')
+    assert formula.semantic(ks, '1') is True
+
+
+def test_tableau_calculus():
+    formula = Or(And(Box(Atom('p')), Atom('r')), And(Atom('r'), Diamond(Atom('q'))))
+    pt = ProofTree(formula)
+    pt.derive()
+
+    print()
+    print(pt)
+
+    assert formula.semantic(pt.kripke_structure, 's') is True

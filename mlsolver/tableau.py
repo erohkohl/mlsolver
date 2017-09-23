@@ -1,7 +1,7 @@
-"""Modal logic tableau calculus module
+"""Modal logic tableau module
 
-This module contains data structures to store the proof tree of modal logic's
-tableau calculus.
+This module contains data structures, that describe the proof tree of
+modal logic formula and the rules of the tableau calculus.
 """
 from mlsolver.formula import *
 from mlsolver.kripke import *
@@ -10,10 +10,12 @@ from mlsolver.kripke import *
 class ProofTree:
     """
     The ProofTree determines one node instance as root of the tableau.
-    Moreover it holds a valid Kripke Structure, if the modal logic formula
-    is satisfiable. There the routine derive() manages the control flow,
-    that checks if the tree has not derived nodes, expand these nodes, adds
-    their children to the leafs and checks whether a path is closed.
+    This root node maps the modal logic formula, that should be solved.
+    Moreover this class holds a valid Kripke structure, if the formula
+    is satisfiable. Therefore the routine derive() manages the control
+    flow, that checks if the tree has not derived nodes, expands these
+    nodes, adds their children to the leafs and checks whether a path
+    is closed.
     """
 
     def __init__(self, formula):
@@ -25,7 +27,7 @@ class ProofTree:
         self.is_closed = None
 
     def derive(self):
-        """Returns a valid Kripke structures if formula is satisfiable.
+        """Determines a valid Kripke structure if formula is satisfiable.
         """
         next_node = self.root_node.__next__()
 
@@ -39,8 +41,9 @@ class ProofTree:
 
         """
         Find leaf, that has no children and return its partial assignment
-        and relations as ks. solutions_leaf stores all leafs of fully derived
-        proof tree, to check whether formula is satisfiable.
+        and relations as Kripke structure. The property solutions_leaf stores 
+        all leafs of the fully derived proof tree, to check whether formula is 
+        satisfiable.
         """
         solutions_leafs = self.root_node.get_all_leafs()
         if solutions_leafs == []:
@@ -134,13 +137,13 @@ class ProofTree:
         return None
 
     def __str__(self):
-        return "Prooftree\n=========\n" + str(self.root_node) + \
-               '\n' + "Kripke Structure\n================\n" + str(self.kripke_structure)
+        return "Proof tree\n==========\n" + str(self.root_node) + \
+               '\n' + "Kripke structure\n================\n" + str(self.kripke_structure)
 
 
 def check_conflict(node):
     """Routine walks through each node and checks whether leafs force
-    conflict with partial assignment
+    conflict with partial assignment.
     """
 
     if isinstance(node, Leaf):
@@ -161,7 +164,7 @@ def check_conflict(node):
 class Node:
     """
     Class represents one node of the proof tree. Therefore it holds one
-    world name, its children and a modal logic formula. The property is_
+    world name, its children and a modal logic formula. Its property is_
     derived is true, when this node was processed by the solver.
     """
 
@@ -177,7 +180,7 @@ class Node:
 
     def add_child(self, nodes):
         """Routine adds one child node or list of children to the current
-        instance.
+        node instance.
         """
         if isinstance(nodes, list):
             for node in nodes:
@@ -191,7 +194,7 @@ class Node:
             nodes.relations.update(self.relations)
 
     def get_all_leafs(self):
-        """Returns list of nodes, which each node has no children.
+        """Returns a list of nodes, where each node has no children.
         """
         leafs = []
 
@@ -207,7 +210,7 @@ class Node:
         return self
 
     def __next__(self):
-        """Return next node, that is not derived yet in post order sequence
+        """Return next node, that is not derived yet in post order sequence.
         """
         if self.is_derived is False:
             return self
@@ -273,8 +276,8 @@ class Node:
 class Leaf(Node):
     """
     This class does not map a leaf of a tree in sense, that it has no children.
-    Moreover this leaf is completely derived, thus it stores only propositional
-    variables or their negations.
+    Moreover is shows, that a node is completely derived, thus it only stores
+    propositional variables or their negations.
     """
 
     def __init__(self, world_name, variable_name, children, assign):
@@ -303,7 +306,7 @@ class Leaf(Node):
 class Bottom(Node):
     """
     Marks one branch of proof tree as conflict, therefore an instance of this class
-    will be assigned to the children of a Leaf node
+    will be assigned to the children of a Leaf node.
     """
 
     def __init__(self):
