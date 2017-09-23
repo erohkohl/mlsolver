@@ -46,6 +46,47 @@ formula = Implies(
 assert True == formula.semantic(ks, '1')
 ```
 
+#### Solve modal logic formula with tableau calculus
+```python
+formula = Or(
+    And(Box(Atom('p')), Atom('r'))
+    , And(Atom('r'), Diamond(Atom('q')))
+)
+pt = ProofTree(formula)
+pt.derive()
+
+print(pt)
+```
+
+
+```bash
+Prooftree
+=========
+s:((Box(p) and r) or (r and Diamond(q)))
+ 	| 
+	|_ s:(Box(p) and r)
+		| 
+		|_ s:Box(p)
+			| 
+			|_ s:r
+	| 
+	|_ s:(r and Diamond(q))
+		| 
+		|_ s:r
+			| 
+			|_ s:Diamond(q)
+				| 
+			     (s, t)
+				| 
+				|_ t:q
+
+Kripke Structure
+================
+(W = {(s,{'r': True})}, R = set())
+```
+
+
+
 #### Modelchecking
 Moreover this framework allows to process new knowledge in addition to the current knowledge base, thus it applies a modal logic formula to a Kripke structure (knowledge base) and returns a model. This model is a valid Kripke structure, in terms all of its worlds forces the formula. Therefore the function *solve()* removes the minimum subset of worlds, that prevent the Kripke structure to force the formula.
 
@@ -81,7 +122,7 @@ model = ks.solve(And(f, g))
 
 #### Test-driven development
 
-While developing this framework I made use of the test-driven approach. Thus this repository contains 56 py.test case to ensure, that the framework works as expected, and for documentation purposes. Before you are able to run all tests, make sure you have installed the setup.py, which only contains py.test as dependency, and you use **Python 3**.
+While developing this framework I made use of the test-driven approach. Thus this repository contains **106 py.test cases** to ensure, that the framework works as expected, and for documentation purposes. Before you are able to run all tests, make sure you have installed the setup.py, which only contains py.test as dependency, and you use **Python 3**.
 
 ```bash
 $ python setup.py install
