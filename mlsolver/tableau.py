@@ -47,7 +47,7 @@ class ProofTree:
         """
         solutions_leafs = self.root_node.get_all_leafs()
         if solutions_leafs == []:
-            pass  # Todo
+            pass
         else:
             for leaf in solutions_leafs:
                 if not isinstance(leaf, Bottom):

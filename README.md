@@ -2,8 +2,8 @@ Modal logic solver
 ================================================================
 ### Framework for modelling Kripke structures and solving modal logic formulas [![Build Status](https://travis-ci.org/erohkohl/ai-modal-logic.svg?branch=master)](https://travis-ci.org/erohkohl/ai-modal-logic) [![codecov](https://codecov.io/gh/erohkohl/ai-modal-logic/branch/master/graph/badge.svg)](https://codecov.io/gh/erohkohl/ai-modal-logic)
 
-This framework provides a tool for modelling Kripke structures, modal and multi modal
-logic formulas in **Python 3**. The aim of this framework is to describe the knowledge base of a multi agent system and its model, after one agent made an announcement. This knowledge base is mapped by a Kripke structure and one agents announcement is wrapped in a multi modal logic formula.
+This framework provides a tool for modelling Kripke structures and solving modal
+logic formulas in **Python 3.6**. The aim of this framework is to describe the knowledge base of a multi agent system and its model, after one agent made an announcement. This knowledge base is mapped by a Kripke structure and one agents announcement is wrapped in a multi modal logic formula.
 
 #### Modelling Kripke structure
 A Kripke Frame describes a simple directed graph and its extension, Kripke structure,
@@ -49,7 +49,7 @@ assert formula.semantic(ks, '1') is True
 #### Solve modal logic formula with tableau calculus
 A common challenge in artificial intelligence is, to determine a valid Kripke
 structure to a given modal logic formula. Therefore the modal logic tableau
-calculus gives us a tool, that constructes a Kripke structure starting from
+calculus gives us a tool, that constructs a Kripke structure starting from
 one world. If the formula is satisfiable, it is true in this world. Imagine we
 are searching for a valid Kripke structure, that satisfies the below formula
 in the world *s*. The only thing to do, is to build this formula, like we already
@@ -103,7 +103,7 @@ Kripke structure
 ```
 
 The output shows, that the tableau calculus determines two possible Kripke
-structures, because all paths are not closed. The second satisfiable Kripke
+structures, because both paths are not closed. Thus the second satisfiable Kripke
 structure would be ```(W = {(s,{'r': True}), (t,{'q': True})}, R = set(('s', 't')))```.
 One path is closed, if there is a conflict in one worlds partial assignment. The bottom
 symbol ```-|``` at the end of a leaf indicates a closed path (see snippet below).
@@ -164,9 +164,9 @@ model = ks.solve(And(f, g))
 
 #### Test-driven development
 
-While developing this framework I made use of the test-driven approach. Thus this repository contains **106 py.test cases** to ensure, that the framework works as expected, and for documentation purposes. Before you are able to run all tests, make sure you have installed the setup.py, which only contains py.test as dependency, and you use **Python 3**.
+While developing this framework I made use of the test-driven approach. Thus this repository contains **106 py.test cases** to ensure, that the framework works as expected, and for documentation purposes. Before you are able to run all tests, make sure you have installed the setup.py, which only contains py.test as dependency, and you use **Python 3.6**.
 
 ```bash
 $ python setup.py install
-$ py.test -v
+$ py.test -vv
 ```
