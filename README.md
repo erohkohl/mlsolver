@@ -58,6 +58,7 @@ method. To check, whether the resolved Kripke structure is realy satisfies the f
 in world s, you can again make use of the semantic() function.
 
 <img src="./doc/tableau_example.png" width="265">
+
 ```python
 from mlsolver.tableau import *
 from mlsolver.formula import ProofTree
@@ -74,6 +75,7 @@ assert formula.semantic(pt.kripke_structure, 's') is True
 ```
 
 **Output:**
+
 ```bash
 Proof tree
 ==========
