@@ -1,6 +1,7 @@
 Modal logic solver
 ================================================================
-### Framework for modelling Kripke structures and solving modal logic formulas [![Build Status](https://travis-ci.org/erohkohl/ai-modal-logic.svg?branch=master)](https://travis-ci.org/erohkohl/ai-modal-logic) [![codecov](https://codecov.io/gh/erohkohl/mlsolver/branch/master/graph/badge.svg)](https://codecov.io/gh/erohkohl/mlsolver)
+### Framework for modelling Kripke structures and solving modal logic formulas 
+[![Build Status](https://travis-ci.org/erohkohl/mlsolver.svg?branch=master)](https://travis-ci.org/erohkohl/mlsolver) [![codecov](https://codecov.io/gh/erohkohl/mlsolver/branch/master/graph/badge.svg)](https://codecov.io/gh/erohkohl/mlsolver)
 
 This framework provides a tool for modelling Kripke structures and solving modal
 logic formulas in **Python 3.6**. The aim of this framework is to describe the knowledge base of a multi agent system and its model, after one agent made an announcement. This knowledge base is mapped by a Kripke structure and one agents announcement is wrapped in a multi modal logic formula.
