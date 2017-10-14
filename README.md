@@ -80,23 +80,27 @@ assert formula.semantic(pt.kripke_structure, 's') is True
 ```bash
 Proof tree
 ==========
-s:((Box(p) and r) or (r and Diamond(q)))
-    |
-    |_ s:(Box(p) and r)
-        |
-        |_ s:Box(p)
+s:((☐ p ∧ r) ∨ (r ∧ ◇ q))
+   |
+   |_ s:(☐ p ∧ r)
+      |
+      |_ s:☐ p
+         |
+         |_ s:r
+   |
+   |_ s:(r ∧ ◇ q)
+      |
+      |_ s:r
+         |
+         |_ s:◇ q
             |
-            |_ s:r
-    |
-    |_ s:(r and Diamond(q))
-        |
-        |_ s:r
-            |
-            |_ s:Diamond(q)
-                |
-              (s, t)
-                |
-                |_ t:q
+          (s, t)
+            | 
+            |_ t:q
+
+
+Kripke structure
+
 
 Kripke structure
 ================
@@ -110,23 +114,23 @@ One path is closed, if there is a conflict in one worlds partial assignment. The
 symbol ```-|``` at the end of a leaf indicates a closed path (see snippet below).
 
 ```bash
-s:((p or q) and not (p -> q))
-    |
-    |_ s:(p or q)
-    |
-    |_ s:not (p -> q)
-        |
-        |_ s:p
+s:((p ∨ q) ∧ ￢(p -> q))
+   |
+   |_ s:(p ∨ q)
+   |
+   |_ s:￢(p -> q)
+      |
+      |_ s:p
+         |
+         |_ s:p
             |
-            |_ s:p
-                |
-                |_ s: not q
-        |
-        |_ s:q
+            |_ s: ￢q
+      |
+      |_ s:q
+         |
+         |_ s:p
             |
-            |_ s:p
-                |
-                |_ s: not q -| # this path is closed
+            |_ s: ￢q -| # this path is closed
 ```
 
 

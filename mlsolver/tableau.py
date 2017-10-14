@@ -243,8 +243,9 @@ class Node:
                and are_children_eq
 
     def __str__(self):
+        indent = "   "
         if self.level == 0:
-            tree_str = "\t" * self.level + repr(self) + "\n "
+            tree_str = repr(self) + "\n"
         else:
             if isinstance(self.children, Bottom):
                 end_str = repr(self.children) + "\n"
@@ -254,14 +255,14 @@ class Node:
             try:
                 # Adds tuple with world names, if path contains diamond
                 if not self.world == self.parent.world:
-                    rel_str = "\t" * (self.level - 1) \
-                              + '  (' + self.parent.world + ', ' + self.world + ')' \
-                              + "\n" + "\t" * self.level + "| \n"
+                    rel_str = indent * (self.level - 1) \
+                              + ' (' + self.parent.world + ', ' + self.world + ')' \
+                              + "\n" + indent * self.level + "| \n"
             except:
                 pass
-            tree_str = "\t" * self.level + "| \n" + \
+            tree_str = indent * self.level + "| \n" + \
                        rel_str + \
-                       "\t" * self.level + "|_ " + repr(self) + end_str
+                       indent * self.level + "|_ " + repr(self) + end_str
 
         if not isinstance(self.children, Bottom):
             for child in self.children:
@@ -300,7 +301,7 @@ class Leaf(Node):
         if self.assign:
             return self.world + ':' + str(self.variable_name)
         else:
-            return self.world + ': not ' + str(self.variable_name)
+            return self.world + ': ' + u"\uFFE2" + str(self.variable_name)
 
 
 class Bottom(Node):

@@ -45,7 +45,10 @@ class Box:
         return isinstance(other, Box) and self.inner == other.inner
 
     def __str__(self):
-        return "Box(" + str(self.inner) + ")"
+        if isinstance(self.inner, Atom):
+            return u"\u2610" + " " + str(self.inner)
+        else:
+            return u"\u2610" + "(" + str(self.inner) + ")"
 
 
 class Box_a:
@@ -117,7 +120,10 @@ class Diamond:
         return isinstance(other, Diamond) and self.inner == other.inner
 
     def __str__(self):
-        return "Diamond(" + str(self.inner) + ")"
+        if isinstance(self.inner, Atom):
+            return u"\u25C7" + " " + str(self.inner)
+        else:
+            return u"\u25C7" + "(" + str(self.inner) + ")"
 
 
 class Diamond_a:
@@ -157,11 +163,9 @@ class Implies:
     def semantic(self, ks, world_to_test):
         return not self.left.semantic(ks, world_to_test) or self.right.semantic(ks, world_to_test)
 
-    # TODO
     def __eq__(self, other):
         return self.left == other.left and self.right == other.right
 
-    # TODO
     def __str__(self):
         return "(" + self.left.__str__() + " -> " + self.right.__str__() + ")"
 
@@ -181,7 +185,7 @@ class Not:
         return self.inner == other.inner
 
     def __str__(self):
-        return "not " + str(self.inner)
+        return u"\uFFE2" + str(self.inner)
 
 
 class And:
@@ -200,7 +204,7 @@ class And:
         return self.left == other.left and self.right == other.right
 
     def __str__(self):
-        return "(" + self.left.__str__() + " and " + self.right.__str__() + ")"
+        return "(" + self.left.__str__() + " " + u"\u2227" + " " + self.right.__str__() + ")"
 
 
 class Or:
@@ -215,10 +219,8 @@ class Or:
     def semantic(self, ks, world_to_test):
         return self.left.semantic(ks, world_to_test) or self.right.semantic(ks, world_to_test)
 
-    # TODO
     def __eq__(self, other):
         return self.left == other.left and self.right == other.right
 
-    # TODO
     def __str__(self):
-        return "(" + self.left.__str__() + " or " + self.right.__str__() + ")"
+        return "(" + self.left.__str__() + " " + u"\u2228" + " " + self.right.__str__() + ")"

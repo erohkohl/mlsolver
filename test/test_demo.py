@@ -1,5 +1,5 @@
-from mlsolver.kripke import *
 from mlsolver.formula import *
+from mlsolver.kripke import *
 from mlsolver.tableau import ProofTree
 
 
@@ -30,5 +30,4 @@ def test_tableau_calculus():
 
     print()
     print(pt)
-
     assert formula.semantic(pt.kripke_structure, 's') is True
